@@ -559,6 +559,11 @@
                                 </div>
 
                                 <div class="section-micro">
+                                    <div class="section-micro-title">📊 Metodologia</div>
+                                    <div class="section-micro-content" id="aMethodology">—</div>
+                                </div>
+
+                                <div class="section-micro">
                                     <div class="section-micro-title">📊 Comps</div>
                                     <div class="section-micro-content" id="aComps">—</div>
                                 </div>
@@ -576,6 +581,12 @@
 
                             <div class="card">
                                 <div class="card-title">🎯 Strategia</div>
+                                
+                                <div class="section-micro" style="margin-bottom: 0.5rem;">
+                                    <div class="section-micro-title">💰 Strategia Cenowa</div>
+                                    <div id="aPricingStrategy" style="font-size: 0.6875rem; line-height: 1.4;">—</div>
+                                </div>
+
                                 <div class="strategy-micro" id="aStrategy"></div>
                             </div>
                         </div>
@@ -766,19 +777,40 @@
             document.getElementById('aPrice').textContent = fmt(marketAnalysis.realSalePrice);
             document.getElementById('aProfit').textContent = `Zysk: ${fmt(verdict.profitPln)} (${verdict.profitPercent}%)`;
             document.getElementById('aMaxPrice').textContent = verdict.note;
+            document.getElementById('aMethodology').textContent = marketAnalysis.methodology || '—';
             document.getElementById('aComps').textContent = `${marketAnalysis.compsCount} ofert | Mediana: ${fmt(marketAnalysis.compsMedian)} | Range: ${marketAnalysis.compsRange}`;
 
             document.getElementById('aPros').innerHTML = vehicle.keyFeatures.map(p => `<li>${p}</li>`).join('');
             document.getElementById('aCons').innerHTML = marketAnalysis.risks.map(c => `<li>${c}</li>`).join('');
 
+            // Pricing Timeline
+            if (salesStrategy.pricingTimeline && salesStrategy.pricingTimeline.length > 0) {
+                const timeline = salesStrategy.pricingTimeline.map(t => 
+                    `<div style="margin-bottom: 0.4rem; padding: 0.3rem; background: #2c2c2e; border-radius: 3px;">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                            <span style="font-weight: 700; color: #007aff; font-size: 0.625rem;">${t.week}</span>
+                            <span style="font-weight: 700; color: #34c759; font-size: 0.75rem;">${t.price}</span>
+                        </div>
+                        <div style="font-size: 0.6875rem; color: #888; margin-top: 0.15rem;">${t.note}</div>
+                    </div>`
+                ).join('');
+                document.getElementById('aPricingStrategy').innerHTML = timeline;
+            } else {
+                document.getElementById('aPricingStrategy').textContent = salesStrategy.listingPrice || '—';
+            }
+
             document.getElementById('aStrategy').innerHTML = `
                 <div class="strategy-micro-card">
-                    <div class="strategy-micro-title">💵 Cena</div>
-                    <div class="strategy-micro-content">${salesStrategy.listingPrice}</div>
+                    <div class="strategy-micro-title">🔧 Poprawki</div>
+                    <div class="strategy-micro-content">${salesStrategy.improvements || '—'}</div>
                 </div>
                 <div class="strategy-micro-card">
                     <div class="strategy-micro-title">📝 Marketing</div>
-                    <div class="strategy-micro-content">${salesStrategy.marketingTips}</div>
+                    <div class="strategy-micro-content">${salesStrategy.marketingTips || '—'}</div>
+                </div>
+                <div class="strategy-micro-card">
+                    <div class="strategy-micro-title">👤 Kupujący</div>
+                    <div class="strategy-micro-content">${salesStrategy.targetBuyer || '—'}</div>
                 </div>
             `;
 
@@ -787,29 +819,326 @@
     });
     </script>
 
-    <div id="prompt" style="display:none;">Jesteś ekspertem rynku aut używanych w Polsce. 
+    <div id="prompt" style="display:none;">Jesteś ekspertem rynku aut używanych w Polsce z 10-letnim doświadczeniem w handlu.
 
-PARSUJ ZE SCREENA:
-- auction_price_eur, transport_eur, country, vehicle (model, rok, przebieg, silnik ccm), equipment
+═══════════════════════════════════════════════════════════════
+ETAP 1: EKSTRAKCJA DANYCH ZE SCREENA AUTO1
+═══════════════════════════════════════════════════════════════
 
-OBLICZ KOSZTY (aplikacja):
-base_pln = (auction_eur + transport_eur) × 4.22
-docs_pln = docs_eur × 4.22 (BE/CZ/DE: 448, AT: 468, IT: 628)
-excise_pln = (auction_eur × 4.22) × rate (≤1999ccm: 3.1%, >1999ccm: 18.6%)
-all_in_pln = base_pln + docs_pln + excise_pln + 660
+Parsuj dokładnie ze zdjęć:
+- auction_price_eur (minimalna oferta)
+- transport_eur (STANDARD, nie Express)
+- country (kraj ostatniej rejestracji, np. BE, CZ, DE, IT)
+- vehicle: marka, model, wersja/trim, rok, przebieg (km), silnik (ccm, paliwo, moc KM), skrzynia, nadwozie, liczba drzwi
+- equipment: PEŁNA lista wyposażenia ze screena
 
-ANALIZA RYNKU:
-1) Identyfikuj trim + opcje (klimatyzacja, automat, LED, nawigacja, skóra, 4x4)
-2) Zbierz 8-15 comps z Otomoto/OLX (podobne: model, rok±1, silnik, skrzynia)
-3) REALNA cena transakcyjna (NIE cena ogłoszenia!) + widełki
-4) Confidence (Wysokie/Średnie/Niskie) + ryzyka handlowe
+═══════════════════════════════════════════════════════════════
+ETAP 2: OBLICZENIA KOSZTÓW (TY TO LICZYSZ)
+═══════════════════════════════════════════════════════════════
 
-WERDYKT:
-profit = sale_price - all_in
-Marża OK: 3500-4500 zł | Min: 2500-3000 zł (tylko szybki obrót)
-KUP / ODPUŚĆ / KUP DO CENY X
+**DOKŁADNY WZÓR:**
+```
+carPLN = auction_price_eur × 4.22
+transportPLN = transport_eur × 4.22
+docsPLN = docs_eur × 4.22
 
-JSON:
+Dokumenty wg kraju:
+- BE, CZ, DE: 448 EUR
+- AT: 468 EUR
+- IT: 628 EUR
+
+excisePLN = carPLN × excise_rate
+Akcyza:
+- ≤1999 ccm: 3.1% (0.031)
+- >1999 ccm: 18.6% (0.186)
+
+additionalPLN = 660 (stałe: rejestracja + pranie + chemia)
+
+ALL_IN_PLN = carPLN + transportPLN + docsPLN + excisePLN + 660
+```
+
+═══════════════════════════════════════════════════════════════
+ETAP 3: ANALIZA RYNKU POLSKI - KRYTYCZNE ZASADY
+═══════════════════════════════════════════════════════════════
+
+🔴 UWAGA: To najważniejsza część! Musisz wycenić REALNIE!
+
+**A) IDENTYFIKACJA WERSJI**
+Ustal dokładnie:
+- Trim/wersja (Active, Comfort, Ambition, Style, GT, Premium, etc.)
+- Kluczowe opcje wpływające na cenę:
+  * Klimatyzacja (MUST w każdym segmencie poza A)
+  * Automat (duży plus)
+  * LED/Xenon (plus)
+  * Nawigacja/CarPlay (średni plus)
+  * Skóra/alcantara (plus)
+  * Podgrzewane fotele (średni plus)
+  * Czujniki parkowania/kamera (plus)
+  * Cruise control/ACC (plus)
+  * Panorama (duży plus)
+  * 4x4 (duży plus w SUV)
+
+**B) METODYKA COMPS - KROK PO KROKU**
+
+⚠️ **WAŻNE:** Nie zgaduj cen! Musisz faktycznie "spojrzeć" na rynek Polski!
+
+**Krok 1: Zdefiniuj kryteria wyszukiwania**
+```
+Otomoto/OLX: 
+- Marka + Model + Generacja
+- Rok: ±1 rok (np. 2012 → szukaj 2011-2013)
+- Silnik: dokładnie lub ±10% pojemności
+- Paliwo: dokładnie (benzyna/diesel/hybryda)
+- Skrzynia: dokładnie (manual/auto)
+- Nadwozie: dokładnie
+```
+
+**Krok 2: Zbierz 10-15 ofert**
+Szukaj podobnych aut. Odrzuć:
+- Uszkodzone/powypadkowe
+- Bez opłat/rej/ubezp
+- Z kratką "do negocjacji" bez ceny
+- Skrajnie wysokie (salon) lub skrajnie niskie (do remontu)
+
+**Krok 3: Policz medianę**
+Z 10-15 ofert wybierz środkowe 6-8 i policz medianę.
+
+**Krok 4: KLUCZOWE - Korekty do ceny TRANSAKCYJNEJ**
+
+🔴 **CENA OGŁOSZENIA ≠ CENA SPRZEDAŻY**
+
+**Zasada:**
+```
+REALNA CENA TRANSAKCYJNA = MEDIANA OGŁOSZEŃ × 0.93-0.97
+```
+
+**Dlaczego?**
+- Każdy sprzedający daje zapas na negocjacje (5-10%)
+- Faktyczna transakcja = mediana minus 3-7%
+
+**Przykład:**
+```
+Mediana ogłoszeń: 18 000 PLN
+Realna transakcja: 16 500 - 17 500 PLN
+(obniżamy o 5-8% bo klient negocjuje)
+```
+
+**Krok 5: Dodatkowe korekty**
+
+**Przebieg:**
+```
+Niski (< średnia -20%): +500 do +1000 PLN
+Średni (±10% średniej): 0 PLN
+Wysoki (> średnia +20%): -500 do -1500 PLN
+Bardzo wysoki (>200k): -1000 do -2000 PLN
+```
+
+**Stan wizualny** (z opisów/zdjęć):
+```
+Bardzo dobry (bezwypadkowy, zadbany): +500 PLN
+Dobry (normalne użytkowe): 0 PLN
+Średni (zadrapania, blacharskie): -500 PLN
+Słaby (wymaga lakierowania): -1500 PLN (ale takie odrzucamy!)
+```
+
+**Import:**
+```
+Import z DE/BE/AT: -300 PLN (lekki dyskont)
+Import z IT/ES: -500 PLN (większy dyskont)
+Polski: 0 PLN (bazowa)
+```
+
+**Wyposażenie vs comps:**
+```
+Lepsze niż średnia comps: +300 do +800 PLN
+Gorsze niż średnia: -300 do -800 PLN
+```
+
+**C) PRZYKŁAD PRAKTYCZNY - ŠKODA CITIGO 2012 1.0 MPI**
+
+```
+Dane auta:
+- Rok: 2012
+- Przebieg: 118k km
+- Silnik: 999 ccm benzyna
+- Wersja: Ambition (klimatyzacja, el. szyby, 5 drzwi)
+
+Krok 1: Wyszukanie
+Otomoto: Citigo/Up!/Mii 2011-2013, 1.0 benzyna, manual, 5d
+
+Krok 2: Znalezione oferty (przykład)
+1. Citigo 2013, 95k: 18 500 PLN
+2. Citigo 2012, 130k: 15 500 PLN
+3. Up! 2013, 88k: 19 000 PLN
+4. Citigo 2012, 105k: 17 000 PLN
+5. Mii 2013, 115k: 16 800 PLN
+6. Citigo 2011, 140k: 15 000 PLN
+7. Citigo 2012, 98k: 17 500 PLN
+8. Up! 2012, 110k: 17 200 PLN
+
+Krok 3: Mediana środkowych 6
+15500, 16800, 17000, 17200, 17500, 18500
+→ Mediana: 17 100 PLN
+
+Krok 4: Korekta do transakcji
+17 100 × 0.95 = 16 245 PLN (obniżamy o 5%)
+
+Krok 5: Dodatkowe korekty
+- Przebieg 118k (średni dla rocznika): 0 PLN
+- Stan: dobry (założenie): 0 PLN
+- Import BE: -300 PLN
+- Wyposażenie Ambition: standardowe, 0 PLN
+
+WYNIK: 16 245 - 300 = 15 945 PLN
+Zaokrąglamy: 16 000 PLN
+
+Widełki realne: 15 500 - 16 500 PLN
+(dolna = szybka sprzedaż, górna = cierpliwa)
+```
+
+**D) CONFIDENCE**
+
+```
+WYSOKIE confidence gdy:
+- Popularny model
+- Dużo podobnych ofert (>10)
+- Jasna wersja wyposażenia
+- Typowa konfiguracja
+- Stabilny rynek dla tego modelu
+
+ŚREDNIE confidence gdy:
+- Średnio popularny model
+- 5-10 podobnych ofert
+- Niejasna wersja wyposażenia
+- Nietypowa konfiguracja (np. diesel w segmencie A)
+
+NISKIE confidence gdy:
+- Rzadki model
+- <5 podobnych ofert
+- Brak jasnej wersji
+- Bardzo nietypowa konfiguracja
+```
+
+**E) STRATEGIA CENOWA - TIMELINE OBNIŻEK**
+
+Po ustaleniu realnej ceny sprzedaży, przygotuj harmonogram:
+
+```
+Zasada: Start POWYŻEJ mediany, stopniowo obniżaj co 2 tygodnie
+
+WAŻNE: 
+- Cena startowa = mediana comps + 5-10% (testuj "early buyers")
+- Cel: maksymalizuj zysk łapiąc tych co nie negocjują
+- Obniżki: 300-500 zł co 2 tygodnie
+- STOP: minimalna marża 2500 zł
+
+Przykład dla Citigo:
+- Mediana comps: 17 100 PLN
+- Realna transakcja (środek): 16 000 PLN
+- Widełki: 15 500 - 16 500 PLN
+
+TIMELINE (6-8 tygodni):
+
+Tydzień 1-2: 16 900 PLN ← START WYSOKO!
+- Cel: Złap "premium buyer" (nie negocjuje, chce szybko)
+- Marża: 4216 zł (33%)
+- Pozycjonowanie: "Bardzo dobry stan, serwisowany, gotowy do jazdy"
+- Akcja: TOP w Otomoto, profesjonalne zdjęcia, pełny opis
+
+Tydzień 3-4: 16 400 PLN (-500)
+- Cel: Lekko poniżej mediany comps, zwiększ ruch
+- Marża: 3716 zł (29%)
+- Pozycjonowanie: "Atrakcyjna cena, sprawdź sam"
+- Akcja: Odśwież ogłoszenie, dodaj nowe zdjęcia detali
+
+Tydzień 5-6: 15 900 PLN (-500)
+- Cel: Środek widełek, TUTAJ się sprzedaje większość
+- Marża: 3216 zł (25%)
+- Pozycjonowanie: "Konkurencyjna cena dla szybkiej decyzji"
+- Akcja: Boost w Otomoto, FB Marketplace, Instagram
+
+Tydzień 7-8: 15 400 PLN (-500)
+- Cel: Dolna granica widełek, szybka sprzedaż
+- Marża: 2716 zł (21%)
+- Pozycjonowanie: "Ostatnia obniżka przed wycofaniem"
+- Akcja: "DO NEGOCJACJI", aktywnie odpowiadaj
+
+Tydzień 9+: 15 000 PLN (-400) ← MINIMALNA
+- Cel: Końcowa cena, wszystko powyżej 2500 zł marży
+- Marża: 2316 zł (18%)
+- Pozycjonowanie: "OSTATNIA SZANSA - cena minimalna"
+- Akcja: Negocjacja możliwa do 14 800 (marża 2116 zł)
+
+STOP ABSOLUTNY: 14 500 PLN
+- Poniżej tego marża < 2000 zł = ODPUŚĆ
+```
+
+**Wytyczne dla AI:**
+1. **Zawsze startuj 5-10% POWYŻEJ mediany comps**
+   - Dla popularnych modeli: +10%
+   - Dla średnich: +7%
+   - Dla niszowych: +5%
+
+2. **Obniżki dynamiczne:**
+   - Pierwsze 2 obniżki: po 500 zł (agresywne)
+   - Kolejne: po 400 zł
+   - Ostatnie: po 300 zł (ostrożnie)
+
+3. **Każda cena musi mieć:**
+   - Dokładną kwotę
+   - Wyliczoną marżę (zł i %)
+   - Cel sprzedażowy
+   - Akcje marketingowe
+
+4. **Negocjacja:**
+   - Przy każdej cenie zostaw zapas 300-500 zł
+   - Minimalna akceptowalna = 2500 zł marży
+   - Poniżej = ODPUŚĆ (chyba że ultra-szybki obrót)
+
+5. **Timeline:**
+   - Minimum 4 kroki (8 tygodni)
+   - Maksimum 6 kroków (12 tygodni)
+   - Po 12 tygodniach = problem, przemyśl strategię
+
+═══════════════════════════════════════════════════════════════
+ETAP 4: WERDYKT ZAKUPOWY
+═══════════════════════════════════════════════════════════════
+
+**Oblicz marżę:**
+```
+profit_pln = real_sale_price_pln - all_in_pln
+profit_percent = (profit_pln / all_in_pln) × 100
+```
+
+**Zasady decyzyjne:**
+
+```
+✅ KUP gdy:
+- profit >= 3500 PLN
+- confidence: Wysokie lub Średnie
+- brak czerwonych flag (naprawy mech/lakier)
+
+⚠️ KUP OSTROŻNIE gdy:
+- profit: 2500-3500 PLN
+- confidence: Wysokie
+- szybki obrót (segment A/B, popularny model)
+
+❌ ODPUŚĆ gdy:
+- profit < 2500 PLN
+- confidence: Niskie
+- wysokie ryzyko techniczne
+- długi obrót przewidywany
+
+💡 KUP DO CENY X gdy:
+- profit za niski przy obecnej cenie
+- potencjał jest, ale trzeba niższej ceny
+- oblicz: max_all_in = real_sale_price - 3500
+```
+
+═══════════════════════════════════════════════════════════════
+FORMAT JSON - WYPEŁNIJ WSZYSTKO DOKŁADNIE
+═══════════════════════════════════════════════════════════════
+
 {
   "vehicle": {
     "model": "Škoda Citigo 1.0 MPI Ambition",
@@ -819,49 +1148,68 @@ JSON:
     "priceEur": 1794,
     "transportEur": 537,
     "country": "BE",
-    "trim": "Ambition",
-    "keyFeatures": ["Klimatyzacja", "El. szyby", "5 drzwi", "Radio"]
+    "trim": "Ambition (średnia - klimatyzacja, el. szyby, 5d)",
+    "keyFeatures": ["Klimatyzacja", "Elektryczne szyby", "5 drzwi", "Radio", "ABS", "ESC"],
+    "dealBreakers": []
   },
   "costs": {
-    "totalPln": 12615,
+    "totalPln": 12684,
     "breakdown": {
       "vehicle": 7570,
       "transport": 2266,
       "documents": 1890,
-      "excise": 229,
+      "excise": 235,
       "additional": 660
     }
   },
   "marketAnalysis": {
     "compsCount": 12,
-    "compsMedian": 17000,
-    "compsRange": "15500-18500",
-    "realSalePrice": 16500,
-    "salePriceRange": "16000-17000",
-    "positioning": "Środek rynku, negocjacja 15500-16000",
-    "confidence": "Wysokie - MPI ma świetną reputację, prosty segment",
+    "compsMedian": 17100,
+    "compsRange": "15500-18500 PLN",
+    "realSalePrice": 16000,
+    "salePriceRange": "15500-16500 PLN",
+    "methodology": "12 ofert Citigo/Up!/Mii 2011-2013, 1.0 benzyna. Mediana 17100, korekta transakcyjna -5% = 16245, korekta import -300 = 15945 → zaokr. 16000",
+    "positioning": "Środek rynku. Wystaw 16200, negocjacja 15500-16000",
+    "confidence": "Wysokie - MPI silnik ma świetną reputację, dużo comps, popularny segment miejski",
     "risks": [
-      "Segment bardzo cenoczuły",
-      "Klient wybiera tanie auto więc mocno negocjuje"
+      "Segment A jest bardzo cenoczuły - klient ma budżet i nie przekroczy go",
+      "Typowe zużycie dla wieku (drobne zadrapania) - uwzględnione w wycenie",
+      "Brak nowoczesnych systemów (brak CarPlay/kamery) ale w tym segmencie norma"
     ]
   },
   "verdict": {
     "decision": "KUP",
-    "reason": "Marża 3885 zł (31%) - IDEALNE w założeniach projektu. Prosty silnik MPI, dobry popyt.",
-    "profitPln": 3885,
-    "profitPercent": 31,
-    "maxAllInPln": 13000,
-    "note": "Wzorcowy przykład - prosty, rotujący, dobra marża"
+    "reason": "Marża 3316 PLN (26%) - bardzo dobra, powyżej minimum. Prosty silnik MPI = niezawodny, niski koszt napraw. Segment miejski rotuje szybko.",
+    "profitPln": 3316,
+    "profitPercent": 26,
+    "maxAllInPln": 12500,
+    "note": "IDEALNY przykład: niski koszt wejścia, pewna marża, szybka rotacja. Przy tej marży jest bufor na ewentualną dłuższą sprzedaż."
   },
   "salesStrategy": {
-    "listingPrice": "16500-17000, negocjacja 15500-16000",
-    "marketingTips": "Podkreśl: MPI = bardzo niezawodny, miejskie auto, tania eksploatacja, 5 drzwi"
+    "listingPrice": "16200 PLN, negocjacja do 15500-16000. Możesz zejść do 15500 i nadal zarobić 2800 zł",
+    "pricingTimeline": [
+      {"week": "Tydzień 1-2", "price": "16200 PLN", "note": "Start - górna granica, testuj rynek"},
+      {"week": "Tydzień 3-4", "price": "15900 PLN", "note": "Lekka obniżka -300 zł, zwiększ widoczność"},
+      {"week": "Tydzień 5-6", "price": "15600 PLN", "note": "Średnia cena rynku, tutaj powinno się sprzedać"},
+      {"week": "Tydzień 7+", "price": "15300 PLN", "note": "Minimalna akceptowalna (marża 2600 zł), szybka sprzedaż"}
+    ],
+    "improvements": "Pranie gruntowne wnętrza (200 zł), polerka drobnymi zadrapaniami (własny zakres), odświeżenie plastików",
+    "marketingTips": "Podkreśl: segment A NAJTAŃSZY W UTRZYMANIU, silnik MPI = bardzo niezawodny (to kluczowe!), 5 drzwi = wygoda, klimatyzacja = komfort. Zdjęcia: czyste wnętrze, detal silnika (podkreśl MPI), miasto w tle",
+    "targetBuyer": "Młoda osoba (18-25 lat) pierwsze auto, rodzic kupujący dziecku do nauki jazdy, osoba starszą szukająca prostego miejskiego auta"
   }
 }
 
-ZASADY:
-- Wyceniaj REALNIE (nie zaniżaj)
-- Uwzględnij koszty po stronie kupującego (odrzuć auta wymagające napraw mech/lakier)
-- Bądź konkretny dla polskiego rynku</div>
+═══════════════════════════════════════════════════════════════
+KLUCZOWE ZASADY - PRZECZYTAJ UWAŻNIE
+═══════════════════════════════════════════════════════════════
+
+1. **NIE ZANIŻAJ** ceny sprzedaży "pod szybki obrót"
+2. **SZUKAJ REALNYCH** comps na polskim rynku
+3. **KORYGUJ** cenę ogłoszeń do transakcyjnej (-5% do -7%)
+4. **UWZGLĘDNIJ** wszystkie korekty (przebieg, stan, import, wyposażenie)
+5. **BĄŚ KONKRETNY** - podaj metodologię wyceny
+6. **MARŻA MINIMUM** 2500-3000 zł, docelowo 3500-4500 zł
+
+Pamiętaj: Twoja wycena musi być REALISTYCZNA dla polskiego rynku używanych aut, nie spekulacyjna!</div>
 </body>
 </html>
