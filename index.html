@@ -2,100 +2,69 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Import Pro">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Importu PRO</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        :root {
-            --safe-top: env(safe-area-inset-top);
-            --safe-bottom: env(safe-area-inset-bottom);
-            --primary: #007aff;
-            --success: #34c759;
-            --warning: #ff9500;
-            --danger: #ff3b30;
-            --bg-dark: #000;
-            --bg-card: #1c1c1e;
-            --bg-secondary: #2c2c2e;
-            --text-primary: #fff;
-            --text-secondary: #8e8e93;
-            --border: #38383a;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding-top: var(--safe-top);
-            padding-bottom: var(--safe-bottom);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            font-size: 13px;
+            line-height: 1.3;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 1.5rem;
+            padding: 0.75rem;
         }
 
-        /* Header */
         header {
             text-align: center;
-            padding: 2rem 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 2rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 0.75rem;
         }
 
         h1 {
-            font-size: clamp(1.75rem, 5vw, 2.5rem);
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--success));
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #007aff, #34c759);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
         }
 
-        .subtitle {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        /* Mode Toggle */
         .mode-toggle {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
         .mode-btn {
-            padding: 0.875rem 2rem;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            font-size: 1rem;
+            padding: 0.5rem 1.25rem;
+            border: 1px solid #333;
+            border-radius: 6px;
+            background: #1c1c1e;
+            color: #888;
+            font-size: 0.8125rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
         .mode-btn.active {
-            border-color: var(--primary);
-            background: var(--primary);
+            border-color: #007aff;
+            background: #007aff;
             color: white;
         }
 
-        /* Sections */
         .section {
             display: none;
         }
@@ -104,242 +73,173 @@
             display: block;
         }
 
-        /* Simple Calculator */
-        .simple-calc-grid {
+        /* COMPACT GRID */
+        .compact-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
+            grid-template-columns: 380px 1fr;
+            gap: 0.75rem;
         }
 
-        @media (min-width: 1024px) {
-            .simple-calc-grid {
-                grid-template-columns: 1fr 1fr;
+        @media (max-width: 1200px) {
+            .compact-grid {
+                grid-template-columns: 1fr;
             }
         }
 
         .card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 2rem;
-            border: 1px solid var(--border);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .card-icon {
-            font-size: 1.5rem;
+            background: #1c1c1e;
+            border-radius: 8px;
+            padding: 0.75rem;
+            border: 1px solid #333;
         }
 
         .card-title {
-            font-size: 1.25rem;
+            font-size: 0.875rem;
             font-weight: 700;
-            color: var(--primary);
+            color: #007aff;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
         }
 
-        .form-group {
-            margin-bottom: 1.25rem;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
         label {
             display: block;
-            font-size: 0.875rem;
+            font-size: 0.6875rem;
+            color: #888;
             font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         input, select {
             width: 100%;
-            padding: 0.875rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background: #2c2c2e;
+            color: #fff;
+            font-size: 0.8125rem;
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
-        }
-
-        select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23007aff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            padding-right: 3rem;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            border-color: #007aff;
         }
 
         .btn {
             width: 100%;
-            padding: 1.125rem;
+            padding: 0.625rem;
             border: none;
-            border-radius: 12px;
-            font-size: 1.125rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), #0051d5);
+            background: #007aff;
             color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 122, 255, 0.4);
         }
 
         .btn:disabled {
             opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
         }
 
-        /* Results Table */
-        .results-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin-top: 1.5rem;
+        /* RESULTS - ULTRA COMPACT */
+        .results-compact {
+            display: grid;
+            gap: 0.5rem;
         }
 
-        .results-table tr {
-            border-bottom: 1px solid var(--border);
+        .mini-card {
+            background: #2c2c2e;
+            border-radius: 6px;
+            padding: 0.5rem;
         }
 
-        .results-table tr:last-child {
-            border-bottom: none;
+        .mini-label {
+            font-size: 0.625rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
         }
 
-        .results-table td {
-            padding: 1rem 0;
-        }
-
-        .results-table td:first-child {
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .results-table td:last-child {
-            text-align: right;
+        .mini-value {
+            font-size: 0.875rem;
             font-weight: 700;
+            color: #007aff;
+        }
+
+        table {
+            width: 100%;
+            font-size: 0.75rem;
+        }
+
+        table td {
+            padding: 0.375rem 0;
+            border-bottom: 1px solid #2c2c2e;
+        }
+
+        table td:first-child {
+            color: #888;
+        }
+
+        table td:last-child {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .total-row td {
+            border-top: 2px solid #007aff;
+            padding-top: 0.5rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .total-row td:last-child {
+            color: #007aff;
             font-size: 1.125rem;
         }
 
-        .results-table .total-row {
-            border-top: 2px solid var(--primary);
-        }
-
-        .results-table .total-row td {
-            padding-top: 1.5rem;
-            font-size: 1.25rem;
-            font-weight: 800;
-        }
-
-        .results-table .total-row td:last-child {
-            color: var(--primary);
-            font-size: 1.75rem;
-        }
-
-        /* AI Section styles... (continuing from previous) */
-        .api-config {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .api-label {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .api-input {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-family: 'Courier New', monospace;
-            font-size: 0.875rem;
-        }
-
+        /* AI SECTION */
         .upload-zone {
-            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
-            border: 2px dashed var(--primary);
-            border-radius: 16px;
-            padding: 3rem 2rem;
+            background: #1c1c1e;
+            border: 2px dashed #007aff;
+            border-radius: 8px;
+            padding: 1.5rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 2rem;
-        }
-
-        .upload-zone:hover {
-            border-color: var(--success);
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, #3c3c3e 100%);
+            margin-bottom: 0.75rem;
         }
 
         .upload-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .upload-text {
-            font-size: 1.25rem;
-            font-weight: 700;
+            font-size: 2rem;
             margin-bottom: 0.5rem;
-        }
-
-        .upload-hint {
-            color: var(--text-secondary);
-            font-size: 0.9375rem;
         }
 
         .thumbnails {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
         .thumbnail {
             position: relative;
             aspect-ratio: 1;
-            border-radius: 12px;
+            border-radius: 6px;
             overflow: hidden;
-            background: var(--bg-card);
-            border: 2px solid var(--border);
+            background: #2c2c2e;
+            border: 1px solid #333;
         }
 
         .thumbnail img {
@@ -350,28 +250,23 @@
 
         .thumbnail-remove {
             position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: var(--danger);
+            top: 0.25rem;
+            right: 0.25rem;
+            background: #ff3b30;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            font-size: 18px;
+            width: 20px;
+            height: 20px;
+            font-size: 14px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
         }
 
         .analyzing {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 3rem 2rem;
+            background: #1c1c1e;
+            border-radius: 8px;
+            padding: 2rem;
             text-align: center;
-            margin: 2rem 0;
             display: none;
         }
 
@@ -380,13 +275,13 @@
         }
 
         .spinner {
-            border: 4px solid var(--bg-secondary);
-            border-top: 4px solid var(--primary);
+            border: 3px solid #2c2c2e;
+            border-top: 3px solid #007aff;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 1rem;
         }
 
         @keyframes spin {
@@ -394,36 +289,156 @@
             100% { transform: rotate(360deg); }
         }
 
-        .analyzing-text {
-            font-size: 1.125rem;
-            color: var(--text-secondary);
-            font-weight: 500;
+        /* ANALYSIS RESULTS - COMPACT */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 1400px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, rgba(52, 199, 89, 0.15), rgba(52, 199, 89, 0.05));
+            border: 1px solid #34c759;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .recommendation-title {
+            font-size: 0.625rem;
+            color: #34c759;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 0.375rem;
+        }
+
+        .recommendation-text {
+            font-size: 0.8125rem;
+            line-height: 1.4;
+        }
+
+        .price-box {
+            text-align: center;
+            background: #1c1c1e;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .price-label {
+            font-size: 0.625rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .price-value {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: #34c759;
+            margin-bottom: 0.375rem;
+        }
+
+        .profit-badge {
+            display: inline-block;
+            background: rgba(52, 199, 89, 0.2);
+            color: #34c759;
+            padding: 0.375rem 0.75rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .section-mini {
+            margin-bottom: 0.75rem;
+        }
+
+        .section-mini-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #007aff;
+            margin-bottom: 0.375rem;
+            text-transform: uppercase;
+        }
+
+        .section-mini-content {
+            font-size: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .list-compact {
+            list-style: none;
+            padding: 0;
+        }
+
+        .list-compact li {
+            padding: 0.25rem 0;
+            padding-left: 1rem;
+            position: relative;
+            font-size: 0.75rem;
+        }
+
+        .list-compact li::before {
+            content: '•';
+            position: absolute;
+            left: 0.25rem;
+            color: #007aff;
+        }
+
+        .strategy-mini {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .strategy-mini-card {
+            background: #2c2c2e;
+            border-radius: 6px;
+            padding: 0.625rem;
+        }
+
+        .strategy-mini-title {
+            font-size: 0.625rem;
+            color: #007aff;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 0.375rem;
+        }
+
+        .strategy-mini-content {
+            font-size: 0.6875rem;
+            line-height: 1.4;
+            color: #ccc;
         }
 
         .hidden {
             display: none;
         }
 
-        @media (max-width: 767px) {
-            .container {
-                padding: 1rem;
-            }
+        .api-input {
+            width: 100%;
+            padding: 0.5rem;
+            background: #2c2c2e;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-family: monospace;
+            font-size: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
 
-            header {
-                padding: 1.5rem 0;
-            }
-
-            .card {
-                padding: 1.5rem;
-            }
-
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-
-            .mode-toggle {
-                flex-direction: column;
-            }
+        .api-label {
+            font-size: 0.6875rem;
+            color: #888;
+            font-weight: 600;
+            margin-bottom: 0.375rem;
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -431,45 +446,33 @@
     <div class="container">
         <header>
             <h1>🚗 Kalkulator Importu PRO</h1>
-            <div class="subtitle">Profesjonalne narzędzie dla importerów</div>
         </header>
 
-        <!-- Mode Toggle -->
         <div class="mode-toggle">
-            <button class="mode-btn active" data-mode="simple">
-                🧮 Prosty Kalkulator
-            </button>
-            <button class="mode-btn" data-mode="ai">
-                🤖 Analiza AI
-            </button>
+            <button class="mode-btn active" data-mode="simple">🧮 Prosty</button>
+            <button class="mode-btn" data-mode="ai">🤖 AI Analiza</button>
         </div>
 
-        <!-- Simple Calculator Section -->
+        <!-- SIMPLE CALCULATOR -->
         <div class="section active" id="simpleSection">
-            <div class="simple-calc-grid">
-                <!-- Input Card -->
+            <div class="compact-grid">
                 <div class="card">
-                    <div class="card-header">
-                        <span class="card-icon">📝</span>
-                        <h2 class="card-title">Dane pojazdu</h2>
-                    </div>
-
-                    <form id="simpleCalcForm">
-                        <div class="grid-2">
-                            <div class="form-group">
+                    <div class="card-title">📝 Dane</div>
+                    <form id="simpleForm">
+                        <div class="form-row">
+                            <div>
                                 <label>Koszt (EUR)</label>
-                                <input type="number" id="simpleCost" placeholder="1611" step="0.01" required>
+                                <input type="number" id="sCost" step="0.01" required>
                             </div>
-                            <div class="form-group">
+                            <div>
                                 <label>Transport (EUR)</label>
-                                <input type="number" id="simpleTransport" placeholder="454" step="0.01" required>
+                                <input type="number" id="sTransport" step="0.01" required>
                             </div>
                         </div>
-
-                        <div class="grid-2">
-                            <div class="form-group">
+                        <div class="form-row">
+                            <div>
                                 <label>Kraj</label>
-                                <select id="simpleCountry" required>
+                                <select id="sCountry" required>
                                     <option value="">—</option>
                                     <option value="AT|468">Austria</option>
                                     <option value="BE|448">Belgia</option>
@@ -477,183 +480,136 @@
                                     <option value="IT|628">Włochy</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div>
                                 <label>Silnik (ccm)</label>
-                                <input type="number" id="simpleEngine" placeholder="1390" step="1">
+                                <input type="number" id="sEngine" step="1">
                             </div>
                         </div>
-
-                        <div class="form-group">
+                        <div>
                             <label>Kurs EUR/PLN</label>
-                            <input type="number" id="simpleRate" value="4.22" step="0.0001" required>
+                            <input type="number" id="sRate" value="4.22" step="0.0001" required>
                         </div>
-
-                        <button type="submit" class="btn btn-primary">Oblicz koszty</button>
+                        <button type="submit" class="btn btn-primary">Oblicz</button>
                     </form>
                 </div>
 
-                <!-- Results Card -->
                 <div class="card">
-                    <div class="card-header">
-                        <span class="card-icon">💰</span>
-                        <h2 class="card-title">Podsumowanie</h2>
-                    </div>
-
-                    <table class="results-table" id="simpleResults">
-                        <tr>
-                            <td>Pojazd</td>
-                            <td id="simpleResultCar">—</td>
-                        </tr>
-                        <tr>
-                            <td>Transport</td>
-                            <td id="simpleResultTransport">—</td>
-                        </tr>
-                        <tr>
-                            <td>Dokumenty</td>
-                            <td id="simpleResultDocs">—</td>
-                        </tr>
-                        <tr>
-                            <td>Akcyza</td>
-                            <td id="simpleResultExcise">—</td>
-                        </tr>
-                        <tr>
-                            <td>Dodatkowe</td>
-                            <td id="simpleResultAdditional">—</td>
-                        </tr>
-                        <tr class="total-row">
-                            <td>RAZEM</td>
-                            <td id="simpleResultTotal">—</td>
-                        </tr>
+                    <div class="card-title">💰 Koszty</div>
+                    <table id="sResults">
+                        <tr><td>Pojazd</td><td id="sResCar">—</td></tr>
+                        <tr><td>Transport</td><td id="sResTransport">—</td></tr>
+                        <tr><td>Dokumenty</td><td id="sResDocs">—</td></tr>
+                        <tr><td>Akcyza</td><td id="sResExcise">—</td></tr>
+                        <tr><td>Dodatkowe</td><td id="sResAdd">—</td></tr>
+                        <tr class="total-row"><td>RAZEM</td><td id="sResTotal">—</td></tr>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- AI Analysis Section -->
+        <!-- AI SECTION -->
         <div class="section" id="aiSection">
-            <!-- API Config -->
-            <div class="api-config">
-                <div class="api-label">🔑 Klucz API OpenAI</div>
-                <input type="password" id="openaiKey" class="api-input" placeholder="sk-proj-...">
-            </div>
+            <div class="api-label">🔑 Klucz API OpenAI</div>
+            <input type="password" id="apiKey" class="api-input" placeholder="sk-proj-...">
 
-            <!-- Upload Zone -->
             <div class="upload-zone" id="uploadZone">
                 <div class="upload-icon">📸</div>
-                <div class="upload-text">Dodaj zdjęcia z AUTO1.com</div>
-                <div class="upload-hint">Kliknij lub przeciągnij | Telefon: kilka screenów | Desktop: 1 screen</div>
+                <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem;">Dodaj zdjęcia AUTO1</div>
+                <div style="font-size: 0.6875rem; color: #888;">Kliknij lub przeciągnij</div>
                 <input type="file" id="imageInput" accept="image/*" multiple class="hidden">
             </div>
 
-            <!-- Thumbnails -->
             <div class="thumbnails" id="thumbnails"></div>
 
-            <!-- Analyze Button -->
-            <button class="btn btn-primary" id="analyzeBtn" disabled>
-                🤖 Analizuj pojazd (AI)
-            </button>
+            <button class="btn btn-primary" id="analyzeBtn" disabled>🤖 Analizuj (AI)</button>
 
-            <!-- Analyzing -->
             <div class="analyzing" id="analyzing">
                 <div class="spinner"></div>
-                <div class="analyzing-text">Analizuję pojazd, rynek i generuję strategię...</div>
+                <div style="color: #888;">Analizuję...</div>
             </div>
 
-            <!-- AI Results Section -->
-            <div id="aiResults" style="display:none; margin-top: 2rem;">
-                <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
-                    <!-- Left Column -->
-                    <div style="display: grid; gap: 1.5rem;">
-                        <!-- Costs Card -->
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="card-icon">💰</span>
-                                <h2 class="card-title">Koszty Importu</h2>
-                            </div>
-                            <table class="results-table">
-                                <tr><td>Pojazd</td><td id="aiCostCar">—</td></tr>
-                                <tr><td>Transport</td><td id="aiCostTransport">—</td></tr>
-                                <tr><td>Dokumenty</td><td id="aiCostDocs">—</td></tr>
-                                <tr><td>Akcyza</td><td id="aiCostExcise">—</td></tr>
-                                <tr><td>Dodatkowe</td><td id="aiCostAdditional">—</td></tr>
-                                <tr class="total-row"><td>RAZEM</td><td id="aiCostTotal">—</td></tr>
+            <!-- RESULTS -->
+            <div id="aiResults" style="display:none; margin-top: 0.75rem;">
+                <div class="analysis-grid">
+                    <!-- LEFT -->
+                    <div>
+                        <div class="card" style="margin-bottom: 0.75rem;">
+                            <div class="card-title">💰 Koszty</div>
+                            <table>
+                                <tr><td>Pojazd</td><td id="aCar">—</td></tr>
+                                <tr><td>Transport</td><td id="aTransport">—</td></tr>
+                                <tr><td>Dokumenty</td><td id="aDocs">—</td></tr>
+                                <tr><td>Akcyza</td><td id="aExcise">—</td></tr>
+                                <tr><td>Dodatkowe</td><td id="aAdd">—</td></tr>
+                                <tr class="total-row"><td>ALL-IN</td><td id="aTotal">—</td></tr>
                             </table>
                         </div>
 
-                        <!-- Vehicle Info Card -->
                         <div class="card">
-                            <div class="card-header">
-                                <span class="card-icon">🚗</span>
-                                <h2 class="card-title">Dane pojazdu</h2>
+                            <div class="card-title">🚗 Pojazd</div>
+                            <div class="mini-card" style="margin-bottom: 0.5rem;">
+                                <div class="mini-label">Model</div>
+                                <div class="mini-value" id="aModel" style="font-size: 0.8125rem;">—</div>
                             </div>
-                            <div style="display: grid; gap: 1rem;">
-                                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
-                                    <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem; text-transform: uppercase;">Model</div>
-                                    <div style="font-size: 1.125rem; font-weight: 700;" id="aiVehicleModel">—</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+                                <div class="mini-card">
+                                    <div class="mini-label">Rok</div>
+                                    <div class="mini-value" id="aYear">—</div>
                                 </div>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-                                    <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
-                                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Rok</div>
-                                        <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary);" id="aiVehicleYear">—</div>
-                                    </div>
-                                    <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
-                                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Przebieg</div>
-                                        <div style="font-size: 1rem; font-weight: 700; color: var(--primary);" id="aiVehicleMileage">—</div>
-                                    </div>
-                                    <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
-                                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Silnik</div>
-                                        <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary);" id="aiVehicleEngine">—</div>
-                                    </div>
+                                <div class="mini-card">
+                                    <div class="mini-label">Przebieg</div>
+                                    <div class="mini-value" id="aMileage" style="font-size: 0.6875rem;">—</div>
+                                </div>
+                                <div class="mini-card">
+                                    <div class="mini-label">Silnik</div>
+                                    <div class="mini-value" id="aEngine">—</div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Recommendation Box -->
-                        <div style="background: linear-gradient(135deg, rgba(52, 199, 89, 0.2) 0%, rgba(52, 199, 89, 0.05) 100%); border: 2px solid var(--success); border-radius: 16px; padding: 2rem;">
-                            <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; color: var(--success); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;">
-                                <span>💡</span><span>Rekomendacja</span>
+                    <!-- RIGHT -->
+                    <div>
+                        <div class="recommendation">
+                            <div class="recommendation-title">💡 Werdykt</div>
+                            <div class="recommendation-text" id="aVerdict">—</div>
+                        </div>
+
+                        <div class="price-box">
+                            <div class="price-label">Prognoza sprzedaży</div>
+                            <div class="price-value" id="aPrice">—</div>
+                            <div class="profit-badge" id="aProfit">—</div>
+                        </div>
+
+                        <div class="card" style="margin-bottom: 0.75rem;">
+                            <div class="section-mini">
+                                <div class="section-mini-title">💵 Max cena zakupu</div>
+                                <div class="section-mini-content" id="aMaxPrice">—</div>
                             </div>
-                            <div style="font-size: 1.125rem; line-height: 1.7; font-weight: 500;" id="aiRecommendation">—</div>
+
+                            <div class="section-mini">
+                                <div class="section-mini-title">⏱️ Rotacja</div>
+                                <div class="section-mini-content" id="aTurnover">—</div>
+                            </div>
+
+                            <div class="section-mini">
+                                <div class="section-mini-title">✅ Plusy</div>
+                                <ul class="list-compact" id="aPros">
+                                    <li>—</li>
+                                </ul>
+                            </div>
+
+                            <div class="section-mini">
+                                <div class="section-mini-title">⚠️ Ryzyka</div>
+                                <ul class="list-compact" id="aCons">
+                                    <li>—</li>
+                                </ul>
+                            </div>
                         </div>
 
-                        <!-- Sale Price -->
-                        <div style="text-align: center; padding: 2rem; background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary)); border-radius: 16px;">
-                            <div style="font-size: 0.875rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem;">Szacowana cena sprzedaży</div>
-                            <div style="font-size: 3rem; font-weight: 900; color: var(--success); margin-bottom: 1rem;" id="aiSalePrice">—</div>
-                            <div style="display: inline-block; background: rgba(52, 199, 89, 0.2); color: var(--success); padding: 0.75rem 1.5rem; border-radius: 30px; font-weight: 700; font-size: 1.125rem;" id="aiProfit">—</div>
-                        </div>
-
-                        <!-- Analysis Sections -->
                         <div class="card">
-                            <div style="margin-bottom: 2rem;">
-                                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; text-transform: uppercase;">
-                                    <span>⏱️</span><span>Ocena Rotacji</span>
-                                </div>
-                                <div style="font-size: 1rem; line-height: 1.8;" id="aiTurnover">—</div>
-                            </div>
-
-                            <div style="margin-bottom: 2rem;">
-                                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; font-weight: 700; color: var(--success); margin-bottom: 1rem; text-transform: uppercase;">
-                                    <span>✅</span><span>Plusy</span>
-                                </div>
-                                <div id="aiPros" style="font-size: 1rem; line-height: 1.8;">—</div>
-                            </div>
-
-                            <div>
-                                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; font-weight: 700; color: var(--danger); margin-bottom: 1rem; text-transform: uppercase;">
-                                    <span>⚠️</span><span>Minusy / Ryzyka</span>
-                                </div>
-                                <div id="aiCons" style="font-size: 1rem; line-height: 1.8;">—</div>
-                            </div>
-                        </div>
-
-                        <!-- Strategy Card -->
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="card-icon">🎯</span>
-                                <h2 class="card-title">Strategia Sprzedaży</h2>
-                            </div>
-                            <div id="strategyGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;"></div>
+                            <div class="card-title">🎯 Strategia</div>
+                            <div class="strategy-mini" id="aStrategy"></div>
                         </div>
                     </div>
                 </div>
@@ -662,356 +618,338 @@
     </div>
 
     <script>
-// Wrap everything in DOMContentLoaded to ensure DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ DOM loaded, initializing app...');
-
-    // Mode switching
-    const modeBtns = document.querySelectorAll('.mode-btn');
-    const sections = document.querySelectorAll('.section');
-
-    modeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            console.log('Mode clicked:', btn.dataset.mode);
-            const mode = btn.dataset.mode;
-            
-            modeBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            sections.forEach(s => s.classList.remove('active'));
-            const targetSection = document.getElementById(mode === 'simple' ? 'simpleSection' : 'aiSection');
-            if (targetSection) {
-                targetSection.classList.add('active');
-                console.log('✅ Switched to', mode, 'mode');
-            } else {
-                console.error('❌ Section not found:', mode);
-            }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mode switching
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(btn.dataset.mode === 'simple' ? 'simpleSection' : 'aiSection').classList.add('active');
+            });
         });
-    });
 
-    // ========== SIMPLE CALCULATOR ==========
-
-    const simpleForm = document.getElementById('simpleCalcForm');
-    if (simpleForm) {
-        simpleForm.addEventListener('submit', (e) => {
+        // Simple calculator
+        document.getElementById('simpleForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            console.log('📊 Calculating...');
+            const cost = parseFloat(document.getElementById('sCost').value) || 0;
+            const transport = parseFloat(document.getElementById('sTransport').value) || 0;
+            const docs = parseFloat(document.getElementById('sCountry').value.split('|')[1]) || 0;
+            const engine = parseInt(document.getElementById('sEngine').value) || 0;
+            const rate = parseFloat(document.getElementById('sRate').value) || 4.22;
             
-            const cost = parseFloat(document.getElementById('simpleCost').value) || 0;
-            const transport = parseFloat(document.getElementById('simpleTransport').value) || 0;
-            const countryData = document.getElementById('simpleCountry').value.split('|');
-            const docs = parseFloat(countryData[1]) || 0;
-            const engine = parseInt(document.getElementById('simpleEngine').value) || 0;
-            const rate = parseFloat(document.getElementById('simpleRate').value) || 4.22;
-            
-            console.log('Input:', { cost, transport, docs, engine, rate });
-            
-            // Calculate excise
-            const exciseRate = engine > 0 ? (engine <= 1999 ? 0.031 : 0.185) : 0.031;
+            const exciseRate = engine > 0 ? (engine <= 1999 ? 0.031 : 0.186) : 0.031;
             
             const costPLN = cost * rate;
             const transportPLN = transport * rate;
             const docsPLN = docs * rate;
             const excisePLN = costPLN * exciseRate;
             const additionalPLN = 660;
-            
             const total = costPLN + transportPLN + docsPLN + excisePLN + additionalPLN;
             
-            console.log('Results:', { costPLN, transportPLN, docsPLN, excisePLN, additionalPLN, total });
-            
-            document.getElementById('simpleResultCar').textContent = formatPLN(costPLN);
-            document.getElementById('simpleResultTransport').textContent = formatPLN(transportPLN);
-            document.getElementById('simpleResultDocs').textContent = formatPLN(docsPLN);
-            document.getElementById('simpleResultExcise').textContent = formatPLN(excisePLN);
-            document.getElementById('simpleResultAdditional').textContent = formatPLN(additionalPLN);
-            document.getElementById('simpleResultTotal').textContent = formatPLN(total);
-            
-            console.log('✅ Results displayed');
+            document.getElementById('sResCar').textContent = fmt(costPLN);
+            document.getElementById('sResTransport').textContent = fmt(transportPLN);
+            document.getElementById('sResDocs').textContent = fmt(docsPLN);
+            document.getElementById('sResExcise').textContent = fmt(excisePLN);
+            document.getElementById('sResAdd').textContent = fmt(additionalPLN);
+            document.getElementById('sResTotal').textContent = fmt(total);
         });
-    }
 
-    function formatPLN(value) {
-        return new Intl.NumberFormat('pl-PL', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-        }).format(value) + ' PLN';
-    }
-
-    // ========== AI ANALYSIS ==========
-
-    // Load OpenAI key
-    const savedKey = localStorage.getItem('openai_api_key');
-    if (savedKey) {
-        document.getElementById('openaiKey').value = savedKey;
-        console.log('✅ API key loaded from storage');
-    }
-
-    document.getElementById('openaiKey').addEventListener('change', (e) => {
-        localStorage.setItem('openai_api_key', e.target.value);
-        updateAnalyzeBtn();
-        console.log('✅ API key saved');
-    });
-
-    // Image handling
-    let uploadedImages = [];
-    const uploadZone = document.getElementById('uploadZone');
-    const imageInput = document.getElementById('imageInput');
-    const thumbnailsContainer = document.getElementById('thumbnails');
-    const analyzeBtn = document.getElementById('analyzeBtn');
-
-    uploadZone.addEventListener('click', () => imageInput.click());
-
-    uploadZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-    });
-
-    uploadZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-        handleImageUpload(files);
-    });
-
-    imageInput.addEventListener('change', (e) => {
-        const files = Array.from(e.target.files);
-        handleImageUpload(files);
-    });
-
-    async function handleImageUpload(files) {
-        console.log('📸 Uploading', files.length, 'files...');
-        for (const file of files) {
-            const base64 = await fileToBase64(file);
-            const dataUrl = await fileToDataUrl(file);
-            uploadedImages.push({ file, base64, dataUrl });
-        }
-        updateThumbnails();
-        updateAnalyzeBtn();
-        console.log('✅ Images uploaded:', uploadedImages.length);
-    }
-
-    function fileToBase64(file) {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result.split(',')[1]);
-            reader.readAsDataURL(file);
-        });
-    }
-
-    function fileToDataUrl(file) {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.readAsDataURL(file);
-        });
-    }
-
-    function updateThumbnails() {
-        thumbnailsContainer.innerHTML = '';
-        uploadedImages.forEach((img, index) => {
-            const div = document.createElement('div');
-            div.className = 'thumbnail';
-            div.innerHTML = `
-                <img src="${img.dataUrl}" alt="Screenshot ${index + 1}">
-                <button class="thumbnail-remove" onclick="window.removeImage(${index})">×</button>
-            `;
-            thumbnailsContainer.appendChild(div);
-        });
-    }
-
-    window.removeImage = function(index) {
-        uploadedImages.splice(index, 1);
-        updateThumbnails();
-        updateAnalyzeBtn();
-        console.log('🗑️ Image removed, remaining:', uploadedImages.length);
-    }
-
-    function updateAnalyzeBtn() {
-        const hasKey = document.getElementById('openaiKey').value.trim().length > 0;
-        const hasImages = uploadedImages.length > 0;
-        analyzeBtn.disabled = !hasKey || !hasImages;
-        console.log('Button status:', { hasKey, hasImages, disabled: analyzeBtn.disabled });
-    }
-
-    // Main analysis
-    analyzeBtn.addEventListener('click', analyzeVehicle);
-
-    async function analyzeVehicle() {
-        const openaiKey = document.getElementById('openaiKey').value;
-        
-        if (!openaiKey || !openaiKey.startsWith('sk-')) {
-            alert('❌ Wprowadź prawidłowy klucz API OpenAI (zaczyna się od sk-)');
-            return;
+        function fmt(v) {
+            return new Intl.NumberFormat('pl-PL', {maximumFractionDigits: 0}).format(v) + ' PLN';
         }
 
-        if (uploadedImages.length === 0) {
-            alert('❌ Dodaj przynajmniej jedno zdjęcie');
-            return;
+        // AI Section
+        const savedKey = localStorage.getItem('openai_api_key');
+        if (savedKey) document.getElementById('apiKey').value = savedKey;
+
+        document.getElementById('apiKey').addEventListener('change', (e) => {
+            localStorage.setItem('openai_api_key', e.target.value);
+            updateBtn();
+        });
+
+        let images = [];
+        const uploadZone = document.getElementById('uploadZone');
+        const imageInput = document.getElementById('imageInput');
+        const thumbnails = document.getElementById('thumbnails');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+
+        uploadZone.addEventListener('click', () => imageInput.click());
+        uploadZone.addEventListener('dragover', (e) => e.preventDefault());
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            handleFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+        });
+        imageInput.addEventListener('change', (e) => handleFiles(Array.from(e.target.files)));
+
+        async function handleFiles(files) {
+            for (const file of files) {
+                const base64 = await toBase64(file);
+                const dataUrl = await toDataUrl(file);
+                images.push({ file, base64, dataUrl });
+            }
+            updateThumbnails();
+            updateBtn();
         }
 
-        console.log('🤖 Starting AI analysis...');
-        document.getElementById('analyzing').classList.add('show');
-        document.getElementById('aiResults').style.display = 'none';
+        function toBase64(file) {
+            return new Promise(r => {
+                const reader = new FileReader();
+                reader.onload = () => r(reader.result.split(',')[1]);
+                reader.readAsDataURL(file);
+            });
+        }
 
-        try {
-            const imageMessages = uploadedImages.map(img => ({
-                type: 'image_url',
-                image_url: {
-                    url: `data:image/jpeg;base64,${img.base64}`,
-                    detail: 'high'
+        function toDataUrl(file) {
+            return new Promise(r => {
+                const reader = new FileReader();
+                reader.onload = () => r(reader.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function updateThumbnails() {
+            thumbnails.innerHTML = '';
+            images.forEach((img, i) => {
+                const div = document.createElement('div');
+                div.className = 'thumbnail';
+                div.innerHTML = `<img src="${img.dataUrl}"><button class="thumbnail-remove" onclick="removeImg(${i})">×</button>`;
+                thumbnails.appendChild(div);
+            });
+        }
+
+        window.removeImg = function(i) {
+            images.splice(i, 1);
+            updateThumbnails();
+            updateBtn();
+        }
+
+        function updateBtn() {
+            analyzeBtn.disabled = !document.getElementById('apiKey').value || images.length === 0;
+        }
+
+        analyzeBtn.addEventListener('click', analyze);
+
+        async function analyze() {
+            const key = document.getElementById('apiKey').value;
+            if (!key || !key.startsWith('sk-')) {
+                alert('Wprowadź klucz API');
+                return;
+            }
+
+            document.getElementById('analyzing').classList.add('show');
+            document.getElementById('aiResults').style.display = 'none';
+
+            try {
+                const msgs = images.map(img => ({
+                    type: 'image_url',
+                    image_url: { url: `data:image/jpeg;base64,${img.base64}`, detail: 'high' }
+                }));
+
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${key}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o',
+                        messages: [{
+                            role: 'user',
+                            content: [
+                                ...msgs,
+                                {
+                                    type: 'text',
+                                    text: document.getElementById('analysisPrompt').textContent
+                                }
+                            ]
+                        }],
+                        max_tokens: 3000,
+                        temperature: 0.7,
+                        response_format: { type: "json_object" }
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    throw new Error(err.error?.message || `API Error: ${response.status}`);
                 }
-            }));
 
-            console.log('📤 Sending request to OpenAI...');
+                const data = await response.json();
+                const result = JSON.parse(data.choices[0].message.content);
+                displayResults(result);
 
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${openaiKey}`
-                },
-                body: JSON.stringify({
-                    model: 'gpt-4o',
-                    messages: [{
-                        role: 'user',
-                        content: [
-                            ...imageMessages,
-                            {
-                                type: 'text',
-                                text: `Analizujesz screenshoty z AUTO1.com. Wyciągnij dane i przeanalizuj dla polskiego rynku.
+            } catch (error) {
+                alert('❌ Błąd: ' + error.message);
+            } finally {
+                document.getElementById('analyzing').classList.remove('show');
+            }
+        }
 
-**EKSTRAKCJA:**
-1. Pełna nazwa (marka model wersja, np. "Volkswagen Polo 1.4 FSI Comfortline")
-2. Rok, przebieg (km), silnik (ccm)
-3. Cena (EUR), najtańszy transport do Polski (EUR)
-4. Kraj pochodzenia (np. IT, DE)
-5. Wersja wyposażenia (Comfortline/Highline/Base) - podaj szczegóły
+        function displayResults(r) {
+            const {vehicle, costs, marketAnalysis, verdict, salesStrategy} = r;
 
-**ANALIZA:**
-- Koszty: dokumenty wg kraju (DE:448, IT:628 EUR), akcyza (3.1% ≤1999ccm, 18.5% >1999ccm), dodatkowe 660 PLN, kurs 4.22
-- Całkowity koszt = (cena+transport+dokumenty)×4.22 + akcyza + 660
+            document.getElementById('aModel').textContent = vehicle.model;
+            document.getElementById('aYear').textContent = vehicle.year;
+            document.getElementById('aMileage').textContent = vehicle.mileage.toLocaleString('pl-PL') + ' km';
+            document.getElementById('aEngine').textContent = vehicle.engine + ' ccm';
 
-**JSON:**
+            document.getElementById('aCar').textContent = fmt(costs.breakdown.vehicle);
+            document.getElementById('aTransport').textContent = fmt(costs.breakdown.transport);
+            document.getElementById('aDocs').textContent = fmt(costs.breakdown.documents);
+            document.getElementById('aExcise').textContent = fmt(costs.breakdown.excise);
+            document.getElementById('aAdd').textContent = fmt(costs.breakdown.additional);
+            document.getElementById('aTotal').textContent = fmt(costs.totalPln);
+
+            document.getElementById('aVerdict').textContent = `${verdict.decision} - ${verdict.reason}`;
+            document.getElementById('aPrice').textContent = fmt(marketAnalysis.realSalePrice);
+            document.getElementById('aProfit').innerHTML = `Zysk: ${fmt(verdict.profitPln)} (${verdict.profitPercent}%)`;
+            document.getElementById('aMaxPrice').textContent = verdict.note || `Max ALL-IN: ${fmt(verdict.maxAllInPln)}`;
+            document.getElementById('aTurnover').textContent = `${marketAnalysis.positioning} | Confidence: ${marketAnalysis.confidence}`;
+
+            document.getElementById('aPros').innerHTML = vehicle.keyFeatures.map(p => `<li>${p}</li>`).join('');
+            document.getElementById('aCons').innerHTML = marketAnalysis.risks.map(c => `<li>${c}</li>`).join('');
+
+            document.getElementById('aStrategy').innerHTML = `
+                <div class="strategy-mini-card">
+                    <div class="strategy-mini-title">💵 Cena</div>
+                    <div class="strategy-mini-content">${salesStrategy.listingPrice}</div>
+                </div>
+                <div class="strategy-mini-card">
+                    <div class="strategy-mini-title">🔧 Poprawki</div>
+                    <div class="strategy-mini-content">${salesStrategy.improvements}</div>
+                </div>
+                <div class="strategy-mini-card">
+                    <div class="strategy-mini-title">📝 Marketing</div>
+                    <div class="strategy-mini-content">${salesStrategy.marketingTips}</div>
+                </div>
+                <div class="strategy-mini-card">
+                    <div class="strategy-mini-title">👤 Kupujący</div>
+                    <div class="strategy-mini-content">${salesStrategy.targetBuyer}</div>
+                </div>
+            `;
+
+            document.getElementById('aiResults').style.display = 'block';
+            document.getElementById('aiResults').scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+    </script>
+
+    <!-- Hidden prompt template -->
+    <div id="analysisPrompt" style="display:none;">ETAP 1: EKSTRAKCJA DANYCH ZE SCREENA AUTO1
+Parsuj ze zdjęć AUTO1:
+- auction_price_eur: Cena aukcji (EUR)
+- transport_standard_eur: Transport STANDARD (EUR)
+- last_registration_country: Kraj ostatniej rejestracji (np. IT, DE)
+- vehicle_core: marka, model, generacja, rok, nadwozie, silnik (ccm/paliwo/moc), skrzynia, napęd, przebieg, VIN (jeśli jest)
+- equipment_text: pełna lista wyposażenia z screena
+- condition_flags: uszkodzenia, naprawy, lakierowanie, błędy (jeśli widoczne)
+
+ETAP 2: OBLICZENIA KOSZTÓW (APLIKACJA)
+Koszty wg cennika AUTO1 (2026):
+- Dokumenty: DE/BE: 448 EUR, AT: 468 EUR, IT: 628 EUR, pozostałe sprawdź w tabeli
+- Akcyza: ≤1999ccm: 3.1%, >1999ccm: 18.6%
+- Kurs: 4.22 PLN/EUR
+- Dodatkowe PL: 660 PLN (rejestracja + pranie + chemia)
+
+Wzór:
+base_pln = (auction_price_eur + transport_eur) × 4.22
+docs_pln = documents_eur × 4.22
+excise_pln = base_pln × excise_rate
+all_in_pln = base_pln + docs_pln + excise_pln + 660
+
+ETAP 3: ANALIZA RYNKU (AI)
+Teraz Ty przejmujesz:
+
+1) IDENTYFIKACJA WERSJI/WYPOSAŻENIA
+- Ustal trim (Comfort/Business/GT/Style/itp.) - pewny/niepewny
+- Kluczowe opcje (+): automat, 4x4, LED, ACC, kamera, nawigacja, skóra, panorama, hak
+- Deal-breakery (-): brak klimy, nietypowa konfiguracja
+
+2) COMPS (PORÓWNANIA PL)
+- Zbierz 8-15 ofert z Otomoto/OLX: marka+model+generacja, rok ±1, silnik/moc, skrzynia, napęd
+- Odrzuć skrajności (uszkodzone, bez opłat, anomalie)
+- Wybierz 5-8 najlepszych, policz medianę i rozrzut
+
+3) CENA TRANSAKCYJNA REALNA
+- Cena ogłoszeń ≠ cena sprzedaży
+- Korekty: przebieg, wyposażenie, stan, import
+- Wynik: cena sprzedaży (PLN) + widełki (min-max) + pozycjonowanie
+
+4) CONFIDENCE + RYZYKA
+- Pewność: Wysokie/Średnie/Niskie
+- Czynniki obniżające pewność
+- Ryzyka handlowe (popyt, typowe awarie jako czynnik negocjacji)
+
+5) WERDYKT
+profit_pln = sale_price_pln - all_in_pln
+profit_percent = (profit_pln / all_in_pln) × 100
+
+Marża docelowa: 3500-4500 zł
+Marża min: 2500-3000 zł (tylko szybki obrót ≤30 dni)
+
+Werdykt:
+- KUP: jeśli profit ≥ 3500 zł i brak czerwonych flag
+- ODPUŚĆ: jeśli profit < 2500 zł lub wysokie ryzyko
+- KUP DO CENY X: jeśli profit za niski → policz max_all_in_pln = sale_price_pln - 3500
+
+FORMAT JSON:
 {
-  "vehicle": {"model": "...", "year": 2009, "mileage": 224328, "engine": 1390, "priceEur": 1611, "transportEur": 454, "country": "IT"},
-  "costs": {"totalPln": 12258, "breakdown": {"vehicle": 6798, "transport": 1916, "documents": 2648, "excise": 236, "additional": 660}},
-  "analysis": {
-    "recommendation": "Krótka rekomendacja czy warto (2-3 zdania)",
-    "estimatedSalePrice": 13500,
-    "profitMargin": 1242,
-    "profitPercent": 10,
-    "turnoverAssessment": "SZYBKI OBRÓT/ŚREDNIA ROTACJA/LEŻAK - uzasadnienie",
-    "pros": ["Plus 1", "Plus 2", "Plus 3"],
-    "cons": ["Minus 1", "Minus 2", "Minus 3"],
-    "salesStrategy": {
-      "listingPrice": "13000-14000 PLN - uzasadnienie",
-      "improvements": "Co poprawić przed sprzedażą",
-      "marketingTips": "Jak opisać w ogłoszeniu",
-      "targetBuyer": "Profil idealnego kupującego"
+  "vehicle": {
+    "model": "Volkswagen Polo 1.4 FSI Comfortline",
+    "year": 2009,
+    "mileage": 224328,
+    "engine": 1390,
+    "priceEur": 1611,
+    "transportEur": 454,
+    "country": "IT",
+    "trim": "Comfortline (pewny)",
+    "keyFeatures": ["Klimatyzacja", "El. szyby", "ABS", "ESP"],
+    "dealBreakers": []
+  },
+  "costs": {
+    "totalPln": 11500,
+    "breakdown": {
+      "vehicle": 6798,
+      "transport": 1916,
+      "documents": 2648,
+      "excise": 236,
+      "additional": 660
     }
+  },
+  "marketAnalysis": {
+    "compsCount": 8,
+    "compsMedian": 13500,
+    "compsRange": "12000-15000 PLN",
+    "realSalePrice": 13000,
+    "salePriceRange": "12500-13500 PLN",
+    "positioning": "Środek rynku, negocjacja do 12000",
+    "confidence": "Średnie - wysoki przebieg, niepewna historia",
+    "risks": [
+      "Bardzo wysoki przebieg 224k km - utrudni sprzedaż",
+      "Wiek 15 lat - możliwe problemy techniczne",
+      "Segment popularny ale przebieg odstrasza młodszych kupujących"
+    ]
+  },
+  "verdict": {
+    "decision": "ODPUŚĆ",
+    "reason": "Marża tylko 1500 zł (13%), poniżej minimum 2500 zł. Wysoki przebieg = ryzyko długiej sprzedaży.",
+    "profitPln": 1500,
+    "profitPercent": 13,
+    "maxAllInPln": 9500,
+    "note": "Aby osiągnąć min 3500 zł marży: max 9500 PLN all-in (obecnie 11500)"
+  },
+  "salesStrategy": {
+    "listingPrice": "12800-13200 PLN, negocjacja 12000-12500",
+    "improvements": "Pranie gruntowne, odświeżenie plastików, drobne poprawki",
+    "marketingTips": "Podkreśl Comfortline, pełna dokumentacja IT, serwisowany",
+    "targetBuyer": "Student/młoda osoba szukająca taniej jazdy, akceptuje wysoki przebieg"
   }
 }
 
-Bądź konkretny dla polskiego rynku (Otomoto/OLX).`
-                            }
-                        ]
-                    }],
-                    max_tokens: 2500,
-                    temperature: 0.7,
-                    response_format: { type: "json_object" }
-                })
-            });
-
-            console.log('📥 Response status:', response.status);
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error?.message || `API Error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log('✅ Raw response:', data);
-            
-            const result = JSON.parse(data.choices[0].message.content);
-            console.log('✅ Parsed result:', result);
-            
-            displayAIResults(result);
-
-        } catch (error) {
-            console.error('❌ Error:', error);
-            alert('❌ Błąd: ' + error.message + '\n\nSprawdź:\n1. Klucz API\n2. Połączenie z internetem\n3. Saldo na koncie OpenAI');
-        } finally {
-            document.getElementById('analyzing').classList.remove('show');
-        }
-    }
-
-    function displayAIResults(result) {
-        const { vehicle, costs, analysis } = result;
-        console.log('📊 Displaying results...');
-
-        // Vehicle info
-        document.getElementById('aiVehicleModel').textContent = vehicle.model;
-        document.getElementById('aiVehicleYear').textContent = vehicle.year;
-        document.getElementById('aiVehicleMileage').textContent = vehicle.mileage.toLocaleString('pl-PL') + ' km';
-        document.getElementById('aiVehicleEngine').textContent = vehicle.engine + ' ccm';
-
-        // Costs
-        document.getElementById('aiCostCar').textContent = formatPLN(costs.breakdown.vehicle);
-        document.getElementById('aiCostTransport').textContent = formatPLN(costs.breakdown.transport);
-        document.getElementById('aiCostDocs').textContent = formatPLN(costs.breakdown.documents);
-        document.getElementById('aiCostExcise').textContent = formatPLN(costs.breakdown.excise);
-        document.getElementById('aiCostAdditional').textContent = formatPLN(costs.breakdown.additional);
-        document.getElementById('aiCostTotal').textContent = formatPLN(costs.totalPln);
-
-        // Analysis
-        document.getElementById('aiRecommendation').textContent = analysis.recommendation;
-        document.getElementById('aiSalePrice').textContent = formatPLN(analysis.estimatedSalePrice);
-        
-        const profitColor = analysis.profitMargin > 0 ? 'var(--success)' : 'var(--danger)';
-        document.getElementById('aiProfit').innerHTML = 
-            `Zysk: <span style="color: ${profitColor}">${formatPLN(analysis.profitMargin)} (${analysis.profitPercent}%)</span>`;
-        
-        document.getElementById('aiTurnover').textContent = analysis.turnoverAssessment;
-        
-        // Pros & Cons with styling
-        const prosList = analysis.pros.map(item => `<div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border);"><span style="color: var(--success); margin-right: 0.5rem;">●</span>${item}</div>`).join('');
-        document.getElementById('aiPros').innerHTML = prosList;
-        
-        const consList = analysis.cons.map(item => `<div style="padding: 0.75rem 0; border-bottom: 1px solid var(--border);"><span style="color: var(--danger); margin-right: 0.5rem;">●</span>${item}</div>`).join('');
-        document.getElementById('aiCons').innerHTML = consList;
-
-        // Strategy cards
-        const strategyGrid = document.getElementById('strategyGrid');
-        strategyGrid.innerHTML = `
-            <div style="background: var(--bg-secondary); border-radius: 12px; padding: 1.75rem; border: 1px solid var(--border);">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">💵</div>
-                <div style="font-size: 0.875rem; color: var(--primary); font-weight: 700; text-transform: uppercase; margin-bottom: 0.75rem;">Cena wywoławcza</div>
-                <div style="font-size: 0.9375rem; line-height: 1.7; color: var(--text-secondary);">${analysis.salesStrategy.listingPrice}</div>
-            </div>
-            <div style="background: var(--bg-secondary); border-radius: 12px; padding: 1.75rem; border: 1px solid var(--border);">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">🔧</div>
-                <div style="font-size: 0.875rem; color: var(--primary); font-weight: 700; text-transform: uppercase; margin-bottom: 0.75rem;">Poprawki</div>
-                <div style="font-size: 0.9375rem; line-height: 1.7; color: var(--text-secondary);">${analysis.salesStrategy.improvements}</div>
-            </div>
-            <div style="background: var(--bg-secondary); border-radius: 12px; padding: 1.75rem; border: 1px solid var(--border);">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">📝</div>
-                <div style="font-size: 0.875rem; color: var(--primary); font-weight: 700; text-transform: uppercase; margin-bottom: 0.75rem;">Marketing</div>
-                <div style="font-size: 0.9375rem; line-height: 1.7; color: var(--text-secondary);">${analysis.salesStrategy.marketingTips}</div>
-            </div>
-            <div style="background: var(--bg-secondary); border-radius: 12px; padding: 1.75rem; border: 1px solid var(--border);">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">👤</div>
-                <div style="font-size: 0.875rem; color: var(--primary); font-weight: 700; text-transform: uppercase; margin-bottom: 0.75rem;">Docelowy kupujący</div>
-                <div style="font-size: 0.9375rem; line-height: 1.7; color: var(--text-secondary);">${analysis.salesStrategy.targetBuyer}</div>
-            </div>
-        `;
-
-        // Show results and scroll to them
-        document.getElementById('aiResults').style.display = 'block';
-        document.getElementById('aiResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        
-        console.log('✅ Results displayed successfully!');
-    }
-
-    console.log('✅ App initialized successfully!');
-});
-    </script>
+ZASADY:
+- NIE zaniżaj ceny pod szybki obrót - wyceniaj REALNIE
+- Odrzucaj auta wymagające napraw mechanicznych/lakierniczych (poza PDR/polerka)
+- Bądź konkretny i zgodny z rzeczywistością rynku PL</div>
 </body>
 </html>
