@@ -5,56 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Importu PRO</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: #000;
             color: #fff;
-            font-size: 13px;
-            line-height: 1.3;
+            font-size: 11px;
+            line-height: 1.2;
+            overflow-x: hidden;
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1800px;
             margin: 0 auto;
-            padding: 0.75rem;
+            padding: 0.5rem;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
             text-align: center;
-            padding: 0.75rem 0;
+            padding: 0.4rem 0;
             border-bottom: 1px solid #333;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
+            flex-shrink: 0;
         }
 
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
             background: linear-gradient(135deg, #007aff, #34c759);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 0.25rem;
         }
 
         .mode-toggle {
             display: flex;
             justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
+            gap: 0.4rem;
+            margin-bottom: 0.5rem;
+            flex-shrink: 0;
         }
 
         .mode-btn {
-            padding: 0.5rem 1.25rem;
+            padding: 0.35rem 1rem;
             border: 1px solid #333;
-            border-radius: 6px;
+            border-radius: 4px;
             background: #1c1c1e;
             color: #888;
-            font-size: 0.8125rem;
+            font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
         }
@@ -65,68 +66,63 @@
             color: white;
         }
 
-        .section {
-            display: none;
-        }
+        .section { display: none; flex: 1; overflow-y: auto; }
+        .section.active { display: flex; flex-direction: column; }
 
-        .section.active {
-            display: block;
-        }
-
-        /* COMPACT GRID */
-        .compact-grid {
+        /* ULTRA COMPACT GRID */
+        .grid-main {
             display: grid;
-            grid-template-columns: 380px 1fr;
-            gap: 0.75rem;
+            grid-template-columns: 320px 1fr;
+            gap: 0.5rem;
+            flex: 1;
+            min-height: 0;
         }
 
         @media (max-width: 1200px) {
-            .compact-grid {
-                grid-template-columns: 1fr;
-            }
+            .grid-main { grid-template-columns: 1fr; }
         }
 
         .card {
             background: #1c1c1e;
-            border-radius: 8px;
-            padding: 0.75rem;
+            border-radius: 6px;
+            padding: 0.5rem;
             border: 1px solid #333;
         }
 
         .card-title {
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: #007aff;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.35rem;
             display: flex;
             align-items: center;
-            gap: 0.375rem;
+            gap: 0.25rem;
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
+            gap: 0.35rem;
+            margin-bottom: 0.35rem;
         }
 
         label {
             display: block;
-            font-size: 0.6875rem;
+            font-size: 0.625rem;
             color: #888;
             font-weight: 600;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
             text-transform: uppercase;
         }
 
         input, select {
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.35rem;
             border: 1px solid #333;
-            border-radius: 4px;
+            border-radius: 3px;
             background: #2c2c2e;
             color: #fff;
-            font-size: 0.8125rem;
+            font-size: 0.75rem;
         }
 
         input:focus, select:focus {
@@ -136,63 +132,29 @@
 
         .btn {
             width: 100%;
-            padding: 0.625rem;
+            padding: 0.45rem;
             border: none;
-            border-radius: 6px;
-            font-size: 0.875rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 0.5rem;
+            margin-top: 0.35rem;
         }
 
-        .btn-primary {
-            background: #007aff;
-            color: white;
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-        }
-
-        /* RESULTS - ULTRA COMPACT */
-        .results-compact {
-            display: grid;
-            gap: 0.5rem;
-        }
-
-        .mini-card {
-            background: #2c2c2e;
-            border-radius: 6px;
-            padding: 0.5rem;
-        }
-
-        .mini-label {
-            font-size: 0.625rem;
-            color: #888;
-            text-transform: uppercase;
-            margin-bottom: 0.25rem;
-        }
-
-        .mini-value {
-            font-size: 0.875rem;
-            font-weight: 700;
-            color: #007aff;
-        }
+        .btn-primary { background: #007aff; color: white; }
+        .btn:disabled { opacity: 0.5; }
 
         table {
             width: 100%;
-            font-size: 0.75rem;
+            font-size: 0.6875rem;
         }
 
         table td {
-            padding: 0.375rem 0;
+            padding: 0.25rem 0;
             border-bottom: 1px solid #2c2c2e;
         }
 
-        table td:first-child {
-            color: #888;
-        }
-
+        table td:first-child { color: #888; }
         table td:last-child {
             text-align: right;
             font-weight: 600;
@@ -200,43 +162,40 @@
 
         .total-row td {
             border-top: 2px solid #007aff;
-            padding-top: 0.5rem;
+            padding-top: 0.35rem;
             font-weight: 700;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
         }
 
         .total-row td:last-child {
             color: #007aff;
-            font-size: 1.125rem;
+            font-size: 0.9375rem;
         }
 
-        /* AI SECTION */
-        .upload-zone {
+        /* AI SECTION - ULTRA COMPACT */
+        .upload-mini {
             background: #1c1c1e;
             border: 2px dashed #007aff;
-            border-radius: 8px;
-            padding: 1.5rem;
+            border-radius: 6px;
+            padding: 0.75rem;
             text-align: center;
             cursor: pointer;
-            margin-bottom: 0.75rem;
-        }
-
-        .upload-icon {
-            font-size: 2rem;
             margin-bottom: 0.5rem;
         }
 
+        .upload-icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
+
         .thumbnails {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 0.35rem;
+            margin-bottom: 0.5rem;
         }
 
         .thumbnail {
             position: relative;
             aspect-ratio: 1;
-            border-radius: 6px;
+            border-radius: 4px;
             overflow: hidden;
             background: #2c2c2e;
             border: 1px solid #333;
@@ -250,38 +209,37 @@
 
         .thumbnail-remove {
             position: absolute;
-            top: 0.25rem;
-            right: 0.25rem;
+            top: 2px;
+            right: 2px;
             background: #ff3b30;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 14px;
+            width: 16px;
+            height: 16px;
+            font-size: 11px;
             cursor: pointer;
+            line-height: 1;
         }
 
         .analyzing {
             background: #1c1c1e;
-            border-radius: 8px;
-            padding: 2rem;
+            border-radius: 6px;
+            padding: 1rem;
             text-align: center;
             display: none;
         }
 
-        .analyzing.show {
-            display: block;
-        }
+        .analyzing.show { display: block; }
 
         .spinner {
-            border: 3px solid #2c2c2e;
-            border-top: 3px solid #007aff;
+            border: 2px solid #2c2c2e;
+            border-top: 2px solid #007aff;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+            margin: 0 auto 0.5rem;
         }
 
         @keyframes spin {
@@ -289,156 +247,178 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ANALYSIS RESULTS - COMPACT */
-        .analysis-grid {
+        /* RESULTS - ONE SCREEN */
+        .results-grid {
             display: grid;
-            grid-template-columns: 420px 1fr;
-            gap: 0.75rem;
+            grid-template-columns: 320px 1fr;
+            gap: 0.5rem;
+            flex: 1;
+            min-height: 0;
         }
 
         @media (max-width: 1400px) {
-            .analysis-grid {
-                grid-template-columns: 1fr;
-            }
+            .results-grid { grid-template-columns: 1fr; }
         }
 
-        .recommendation {
+        .mini-card {
+            background: #2c2c2e;
+            border-radius: 4px;
+            padding: 0.35rem;
+        }
+
+        .mini-label {
+            font-size: 0.5625rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.15rem;
+        }
+
+        .mini-value {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #007aff;
+        }
+
+        .verdict-box {
             background: linear-gradient(135deg, rgba(52, 199, 89, 0.15), rgba(52, 199, 89, 0.05));
             border: 1px solid #34c759;
-            border-radius: 6px;
-            padding: 0.75rem;
-            margin-bottom: 0.75rem;
+            border-radius: 4px;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .recommendation-title {
-            font-size: 0.625rem;
+        .verdict-title {
+            font-size: 0.5625rem;
             color: #34c759;
             font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 0.375rem;
-        }
-
-        .recommendation-text {
-            font-size: 0.8125rem;
-            line-height: 1.4;
-        }
-
-        .price-box {
-            text-align: center;
-            background: #1c1c1e;
-            border-radius: 6px;
-            padding: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .price-label {
-            font-size: 0.625rem;
-            color: #888;
             text-transform: uppercase;
             margin-bottom: 0.25rem;
         }
 
-        .price-value {
-            font-size: 1.75rem;
-            font-weight: 900;
-            color: #34c759;
-            margin-bottom: 0.375rem;
+        .verdict-text {
+            font-size: 0.6875rem;
+            line-height: 1.3;
         }
 
-        .profit-badge {
+        .price-compact {
+            text-align: center;
+            background: #1c1c1e;
+            border-radius: 4px;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-label {
+            font-size: 0.5625rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.15rem;
+        }
+
+        .price-value {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #34c759;
+            margin-bottom: 0.25rem;
+        }
+
+        .profit-mini {
             display: inline-block;
             background: rgba(52, 199, 89, 0.2);
             color: #34c759;
-            padding: 0.375rem 0.75rem;
-            border-radius: 12px;
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.625rem;
         }
 
-        .section-mini {
-            margin-bottom: 0.75rem;
+        .section-micro {
+            margin-bottom: 0.5rem;
         }
 
-        .section-mini-title {
-            font-size: 0.75rem;
+        .section-micro-title {
+            font-size: 0.625rem;
             font-weight: 700;
             color: #007aff;
-            margin-bottom: 0.375rem;
+            margin-bottom: 0.25rem;
             text-transform: uppercase;
         }
 
-        .section-mini-content {
-            font-size: 0.75rem;
-            line-height: 1.5;
+        .section-micro-content {
+            font-size: 0.6875rem;
+            line-height: 1.3;
         }
 
-        .list-compact {
+        .list-micro {
             list-style: none;
             padding: 0;
         }
 
-        .list-compact li {
-            padding: 0.25rem 0;
-            padding-left: 1rem;
+        .list-micro li {
+            padding: 0.15rem 0;
+            padding-left: 0.75rem;
             position: relative;
-            font-size: 0.75rem;
+            font-size: 0.6875rem;
         }
 
-        .list-compact li::before {
+        .list-micro li::before {
             content: '•';
             position: absolute;
-            left: 0.25rem;
+            left: 0.15rem;
             color: #007aff;
         }
 
-        .strategy-mini {
+        .strategy-micro {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.35rem;
         }
 
-        .strategy-mini-card {
+        .strategy-micro-card {
             background: #2c2c2e;
-            border-radius: 6px;
-            padding: 0.625rem;
+            border-radius: 4px;
+            padding: 0.4rem;
         }
 
-        .strategy-mini-title {
-            font-size: 0.625rem;
+        .strategy-micro-title {
+            font-size: 0.5625rem;
             color: #007aff;
             font-weight: 700;
             text-transform: uppercase;
-            margin-bottom: 0.375rem;
+            margin-bottom: 0.25rem;
         }
 
-        .strategy-mini-content {
-            font-size: 0.6875rem;
-            line-height: 1.4;
+        .strategy-micro-content {
+            font-size: 0.625rem;
+            line-height: 1.3;
             color: #ccc;
         }
 
-        .hidden {
-            display: none;
-        }
+        .hidden { display: none; }
 
         .api-input {
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.35rem;
             background: #2c2c2e;
             border: 1px solid #333;
-            border-radius: 6px;
+            border-radius: 4px;
             color: #fff;
             font-family: monospace;
-            font-size: 0.75rem;
-            margin-bottom: 0.75rem;
+            font-size: 0.6875rem;
+            margin-bottom: 0.5rem;
         }
 
         .api-label {
-            font-size: 0.6875rem;
+            font-size: 0.625rem;
             color: #888;
             font-weight: 600;
-            margin-bottom: 0.375rem;
+            margin-bottom: 0.25rem;
             text-transform: uppercase;
+        }
+
+        .scrollable {
+            overflow-y: auto;
+            max-height: 100%;
         }
     </style>
 </head>
@@ -450,166 +430,154 @@
 
         <div class="mode-toggle">
             <button class="mode-btn active" data-mode="simple">🧮 Prosty</button>
-            <button class="mode-btn" data-mode="ai">🤖 AI Analiza</button>
+            <button class="mode-btn" data-mode="ai">🤖 AI</button>
         </div>
 
-        <!-- SIMPLE CALCULATOR -->
+        <!-- SIMPLE -->
         <div class="section active" id="simpleSection">
-            <div class="compact-grid">
+            <div class="grid-main">
                 <div class="card">
                     <div class="card-title">📝 Dane</div>
-                    <form id="simpleForm">
+                    <form id="sForm">
                         <div class="form-row">
-                            <div>
-                                <label>Koszt (EUR)</label>
-                                <input type="number" id="sCost" step="0.01" required>
-                            </div>
-                            <div>
-                                <label>Transport (EUR)</label>
-                                <input type="number" id="sTransport" step="0.01" required>
-                            </div>
+                            <div><label>Koszt (EUR)</label><input type="number" id="sCost" step="0.01" required></div>
+                            <div><label>Transport (EUR)</label><input type="number" id="sTransport" step="0.01" required></div>
                         </div>
                         <div class="form-row">
                             <div>
                                 <label>Kraj</label>
                                 <select id="sCountry" required>
                                     <option value="">—</option>
-                                    <option value="AT|468">Austria</option>
                                     <option value="BE|448">Belgia</option>
+                                    <option value="CZ|448">Czechy</option>
                                     <option value="DE|448">Niemcy</option>
+                                    <option value="AT|468">Austria</option>
                                     <option value="IT|628">Włochy</option>
                                 </select>
                             </div>
-                            <div>
-                                <label>Silnik (ccm)</label>
-                                <input type="number" id="sEngine" step="1">
-                            </div>
+                            <div><label>Silnik (ccm)</label><input type="number" id="sEngine" step="1"></div>
                         </div>
-                        <div>
-                            <label>Kurs EUR/PLN</label>
-                            <input type="number" id="sRate" value="4.22" step="0.0001" required>
-                        </div>
+                        <div><label>Kurs EUR/PLN</label><input type="number" id="sRate" value="4.22" step="0.0001" required></div>
                         <button type="submit" class="btn btn-primary">Oblicz</button>
                     </form>
                 </div>
 
                 <div class="card">
                     <div class="card-title">💰 Koszty</div>
-                    <table id="sResults">
+                    <table>
                         <tr><td>Pojazd</td><td id="sResCar">—</td></tr>
                         <tr><td>Transport</td><td id="sResTransport">—</td></tr>
                         <tr><td>Dokumenty</td><td id="sResDocs">—</td></tr>
                         <tr><td>Akcyza</td><td id="sResExcise">—</td></tr>
                         <tr><td>Dodatkowe</td><td id="sResAdd">—</td></tr>
-                        <tr class="total-row"><td>RAZEM</td><td id="sResTotal">—</td></tr>
+                        <tr class="total-row"><td>ALL-IN</td><td id="sResTotal">—</td></tr>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- AI SECTION -->
+        <!-- AI -->
         <div class="section" id="aiSection">
-            <div class="api-label">🔑 Klucz API OpenAI</div>
-            <input type="password" id="apiKey" class="api-input" placeholder="sk-proj-...">
+            <div style="display: flex; flex-direction: column; height: 100%; gap: 0.5rem;">
+                <div style="flex-shrink: 0;">
+                    <div class="api-label">🔑 Klucz API OpenAI</div>
+                    <input type="password" id="apiKey" class="api-input" placeholder="sk-proj-...">
 
-            <div class="upload-zone" id="uploadZone">
-                <div class="upload-icon">📸</div>
-                <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem;">Dodaj zdjęcia AUTO1</div>
-                <div style="font-size: 0.6875rem; color: #888;">Kliknij lub przeciągnij</div>
-                <input type="file" id="imageInput" accept="image/*" multiple class="hidden">
-            </div>
-
-            <div class="thumbnails" id="thumbnails"></div>
-
-            <button class="btn btn-primary" id="analyzeBtn" disabled>🤖 Analizuj (AI)</button>
-
-            <div class="analyzing" id="analyzing">
-                <div class="spinner"></div>
-                <div style="color: #888;">Analizuję...</div>
-            </div>
-
-            <!-- RESULTS -->
-            <div id="aiResults" style="display:none; margin-top: 0.75rem;">
-                <div class="analysis-grid">
-                    <!-- LEFT -->
-                    <div>
-                        <div class="card" style="margin-bottom: 0.75rem;">
-                            <div class="card-title">💰 Koszty</div>
-                            <table>
-                                <tr><td>Pojazd</td><td id="aCar">—</td></tr>
-                                <tr><td>Transport</td><td id="aTransport">—</td></tr>
-                                <tr><td>Dokumenty</td><td id="aDocs">—</td></tr>
-                                <tr><td>Akcyza</td><td id="aExcise">—</td></tr>
-                                <tr><td>Dodatkowe</td><td id="aAdd">—</td></tr>
-                                <tr class="total-row"><td>ALL-IN</td><td id="aTotal">—</td></tr>
-                            </table>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-title">🚗 Pojazd</div>
-                            <div class="mini-card" style="margin-bottom: 0.5rem;">
-                                <div class="mini-label">Model</div>
-                                <div class="mini-value" id="aModel" style="font-size: 0.8125rem;">—</div>
-                            </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
-                                <div class="mini-card">
-                                    <div class="mini-label">Rok</div>
-                                    <div class="mini-value" id="aYear">—</div>
-                                </div>
-                                <div class="mini-card">
-                                    <div class="mini-label">Przebieg</div>
-                                    <div class="mini-value" id="aMileage" style="font-size: 0.6875rem;">—</div>
-                                </div>
-                                <div class="mini-card">
-                                    <div class="mini-label">Silnik</div>
-                                    <div class="mini-value" id="aEngine">—</div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="upload-mini" id="uploadZone">
+                        <div class="upload-icon">📸</div>
+                        <div style="font-size: 0.75rem; font-weight: 600;">AUTO1 screeny</div>
+                        <input type="file" id="imageInput" accept="image/*" multiple class="hidden">
                     </div>
 
-                    <!-- RIGHT -->
-                    <div>
-                        <div class="recommendation">
-                            <div class="recommendation-title">💡 Werdykt</div>
-                            <div class="recommendation-text" id="aVerdict">—</div>
+                    <div class="thumbnails" id="thumbnails"></div>
+
+                    <button class="btn btn-primary" id="analyzeBtn" disabled>🤖 Analizuj</button>
+
+                    <div class="analyzing" id="analyzing">
+                        <div class="spinner"></div>
+                        <div style="color: #888; font-size: 0.75rem;">Analizuję...</div>
+                    </div>
+                </div>
+
+                <!-- RESULTS -->
+                <div id="aiResults" style="display:none; flex: 1; min-height: 0;">
+                    <div class="results-grid">
+                        <!-- LEFT -->
+                        <div class="scrollable">
+                            <div class="card" style="margin-bottom: 0.5rem;">
+                                <div class="card-title">💰 Koszty</div>
+                                <table>
+                                    <tr><td>Pojazd</td><td id="aCar">—</td></tr>
+                                    <tr><td>Transport</td><td id="aTransport">—</td></tr>
+                                    <tr><td>Dokumenty</td><td id="aDocs">—</td></tr>
+                                    <tr><td>Akcyza</td><td id="aExcise">—</td></tr>
+                                    <tr><td>Dodatkowe</td><td id="aAdd">—</td></tr>
+                                    <tr class="total-row"><td>ALL-IN</td><td id="aTotal">—</td></tr>
+                                </table>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">🚗 Pojazd</div>
+                                <div class="mini-card" style="margin-bottom: 0.35rem;">
+                                    <div class="mini-label">Model</div>
+                                    <div class="mini-value" id="aModel" style="font-size: 0.6875rem;">—</div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.35rem;">
+                                    <div class="mini-card">
+                                        <div class="mini-label">Rok</div>
+                                        <div class="mini-value" id="aYear">—</div>
+                                    </div>
+                                    <div class="mini-card">
+                                        <div class="mini-label">Przebieg</div>
+                                        <div class="mini-value" id="aMileage" style="font-size: 0.625rem;">—</div>
+                                    </div>
+                                    <div class="mini-card">
+                                        <div class="mini-label">Silnik</div>
+                                        <div class="mini-value" id="aEngine">—</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="price-box">
-                            <div class="price-label">Prognoza sprzedaży</div>
-                            <div class="price-value" id="aPrice">—</div>
-                            <div class="profit-badge" id="aProfit">—</div>
-                        </div>
-
-                        <div class="card" style="margin-bottom: 0.75rem;">
-                            <div class="section-mini">
-                                <div class="section-mini-title">💵 Max cena zakupu</div>
-                                <div class="section-mini-content" id="aMaxPrice">—</div>
+                        <!-- RIGHT -->
+                        <div class="scrollable">
+                            <div class="verdict-box">
+                                <div class="verdict-title">💡 Werdykt</div>
+                                <div class="verdict-text" id="aVerdict">—</div>
                             </div>
 
-                            <div class="section-mini">
-                                <div class="section-mini-title">⏱️ Rotacja</div>
-                                <div class="section-mini-content" id="aTurnover">—</div>
+                            <div class="price-compact">
+                                <div class="price-label">Cena sprzedaży</div>
+                                <div class="price-value" id="aPrice">—</div>
+                                <div class="profit-mini" id="aProfit">—</div>
                             </div>
 
-                            <div class="section-mini">
-                                <div class="section-mini-title">✅ Plusy</div>
-                                <ul class="list-compact" id="aPros">
-                                    <li>—</li>
-                                </ul>
+                            <div class="card" style="margin-bottom: 0.5rem;">
+                                <div class="section-micro">
+                                    <div class="section-micro-title">💵 Max cena</div>
+                                    <div class="section-micro-content" id="aMaxPrice">—</div>
+                                </div>
+
+                                <div class="section-micro">
+                                    <div class="section-micro-title">📊 Comps</div>
+                                    <div class="section-micro-content" id="aComps">—</div>
+                                </div>
+
+                                <div class="section-micro">
+                                    <div class="section-micro-title">✅ Plusy</div>
+                                    <ul class="list-micro" id="aPros"></ul>
+                                </div>
+
+                                <div class="section-micro">
+                                    <div class="section-micro-title">⚠️ Ryzyka</div>
+                                    <ul class="list-micro" id="aCons"></ul>
+                                </div>
                             </div>
 
-                            <div class="section-mini">
-                                <div class="section-mini-title">⚠️ Ryzyka</div>
-                                <ul class="list-compact" id="aCons">
-                                    <li>—</li>
-                                </ul>
+                            <div class="card">
+                                <div class="card-title">🎯 Strategia</div>
+                                <div class="strategy-micro" id="aStrategy"></div>
                             </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-title">🎯 Strategia</div>
-                            <div class="strategy-mini" id="aStrategy"></div>
                         </div>
                     </div>
                 </div>
@@ -619,7 +587,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Mode switching
+        // Mode
         document.querySelectorAll('.mode-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
@@ -629,8 +597,8 @@
             });
         });
 
-        // Simple calculator
-        document.getElementById('simpleForm').addEventListener('submit', (e) => {
+        // Simple calc
+        document.getElementById('sForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const cost = parseFloat(document.getElementById('sCost').value) || 0;
             const transport = parseFloat(document.getElementById('sTransport').value) || 0;
@@ -638,16 +606,18 @@
             const engine = parseInt(document.getElementById('sEngine').value) || 0;
             const rate = parseFloat(document.getElementById('sRate').value) || 4.22;
             
-            const exciseRate = engine > 0 ? (engine <= 1999 ? 0.031 : 0.186) : 0.031;
-            
-            const costPLN = cost * rate;
+            // POPRAWKA: base dla akcyzy = tylko pojazd, NIE pojazd+transport
+            const carPLN = cost * rate;
             const transportPLN = transport * rate;
             const docsPLN = docs * rate;
-            const excisePLN = costPLN * exciseRate;
-            const additionalPLN = 660;
-            const total = costPLN + transportPLN + docsPLN + excisePLN + additionalPLN;
             
-            document.getElementById('sResCar').textContent = fmt(costPLN);
+            const exciseRate = engine > 0 ? (engine <= 1999 ? 0.031 : 0.186) : 0.031;
+            const excisePLN = carPLN * exciseRate; // POPRAWIONE: tylko od pojazdu!
+            
+            const additionalPLN = 660;
+            const total = carPLN + transportPLN + docsPLN + excisePLN + additionalPLN;
+            
+            document.getElementById('sResCar').textContent = fmt(carPLN);
             document.getElementById('sResTransport').textContent = fmt(transportPLN);
             document.getElementById('sResDocs').textContent = fmt(docsPLN);
             document.getElementById('sResExcise').textContent = fmt(excisePLN);
@@ -656,10 +626,10 @@
         });
 
         function fmt(v) {
-            return new Intl.NumberFormat('pl-PL', {maximumFractionDigits: 0}).format(v) + ' PLN';
+            return new Intl.NumberFormat('pl-PL', {maximumFractionDigits: 0}).format(v) + ' zł';
         }
 
-        // AI Section
+        // AI
         const savedKey = localStorage.getItem('openai_api_key');
         if (savedKey) document.getElementById('apiKey').value = savedKey;
 
@@ -732,10 +702,7 @@
 
         async function analyze() {
             const key = document.getElementById('apiKey').value;
-            if (!key || !key.startsWith('sk-')) {
-                alert('Wprowadź klucz API');
-                return;
-            }
+            if (!key) return;
 
             document.getElementById('analyzing').classList.add('show');
             document.getElementById('aiResults').style.display = 'none';
@@ -758,10 +725,7 @@
                             role: 'user',
                             content: [
                                 ...msgs,
-                                {
-                                    type: 'text',
-                                    text: document.getElementById('analysisPrompt').textContent
-                                }
+                                { type: 'text', text: document.getElementById('prompt').textContent }
                             ]
                         }],
                         max_tokens: 3000,
@@ -770,10 +734,7 @@
                     })
                 });
 
-                if (!response.ok) {
-                    const err = await response.json().catch(() => ({}));
-                    throw new Error(err.error?.message || `API Error: ${response.status}`);
-                }
+                if (!response.ok) throw new Error('API Error');
 
                 const data = await response.json();
                 const result = JSON.parse(data.choices[0].message.content);
@@ -791,7 +752,7 @@
 
             document.getElementById('aModel').textContent = vehicle.model;
             document.getElementById('aYear').textContent = vehicle.year;
-            document.getElementById('aMileage').textContent = vehicle.mileage.toLocaleString('pl-PL') + ' km';
+            document.getElementById('aMileage').textContent = (vehicle.mileage/1000).toFixed(0) + 'k km';
             document.getElementById('aEngine').textContent = vehicle.engine + ' ccm';
 
             document.getElementById('aCar').textContent = fmt(costs.breakdown.vehicle);
@@ -803,153 +764,104 @@
 
             document.getElementById('aVerdict').textContent = `${verdict.decision} - ${verdict.reason}`;
             document.getElementById('aPrice').textContent = fmt(marketAnalysis.realSalePrice);
-            document.getElementById('aProfit').innerHTML = `Zysk: ${fmt(verdict.profitPln)} (${verdict.profitPercent}%)`;
-            document.getElementById('aMaxPrice').textContent = verdict.note || `Max ALL-IN: ${fmt(verdict.maxAllInPln)}`;
-            document.getElementById('aTurnover').textContent = `${marketAnalysis.positioning} | Confidence: ${marketAnalysis.confidence}`;
+            document.getElementById('aProfit').textContent = `Zysk: ${fmt(verdict.profitPln)} (${verdict.profitPercent}%)`;
+            document.getElementById('aMaxPrice').textContent = verdict.note;
+            document.getElementById('aComps').textContent = `${marketAnalysis.compsCount} ofert | Mediana: ${fmt(marketAnalysis.compsMedian)} | Range: ${marketAnalysis.compsRange}`;
 
             document.getElementById('aPros').innerHTML = vehicle.keyFeatures.map(p => `<li>${p}</li>`).join('');
             document.getElementById('aCons').innerHTML = marketAnalysis.risks.map(c => `<li>${c}</li>`).join('');
 
             document.getElementById('aStrategy').innerHTML = `
-                <div class="strategy-mini-card">
-                    <div class="strategy-mini-title">💵 Cena</div>
-                    <div class="strategy-mini-content">${salesStrategy.listingPrice}</div>
+                <div class="strategy-micro-card">
+                    <div class="strategy-micro-title">💵 Cena</div>
+                    <div class="strategy-micro-content">${salesStrategy.listingPrice}</div>
                 </div>
-                <div class="strategy-mini-card">
-                    <div class="strategy-mini-title">🔧 Poprawki</div>
-                    <div class="strategy-mini-content">${salesStrategy.improvements}</div>
-                </div>
-                <div class="strategy-mini-card">
-                    <div class="strategy-mini-title">📝 Marketing</div>
-                    <div class="strategy-mini-content">${salesStrategy.marketingTips}</div>
-                </div>
-                <div class="strategy-mini-card">
-                    <div class="strategy-mini-title">👤 Kupujący</div>
-                    <div class="strategy-mini-content">${salesStrategy.targetBuyer}</div>
+                <div class="strategy-micro-card">
+                    <div class="strategy-micro-title">📝 Marketing</div>
+                    <div class="strategy-micro-content">${salesStrategy.marketingTips}</div>
                 </div>
             `;
 
             document.getElementById('aiResults').style.display = 'block';
-            document.getElementById('aiResults').scrollIntoView({ behavior: 'smooth' });
         }
     });
     </script>
 
-    <!-- Hidden prompt template -->
-    <div id="analysisPrompt" style="display:none;">ETAP 1: EKSTRAKCJA DANYCH ZE SCREENA AUTO1
-Parsuj ze zdjęć AUTO1:
-- auction_price_eur: Cena aukcji (EUR)
-- transport_standard_eur: Transport STANDARD (EUR)
-- last_registration_country: Kraj ostatniej rejestracji (np. IT, DE)
-- vehicle_core: marka, model, generacja, rok, nadwozie, silnik (ccm/paliwo/moc), skrzynia, napęd, przebieg, VIN (jeśli jest)
-- equipment_text: pełna lista wyposażenia z screena
-- condition_flags: uszkodzenia, naprawy, lakierowanie, błędy (jeśli widoczne)
+    <div id="prompt" style="display:none;">Jesteś ekspertem rynku aut używanych w Polsce. 
 
-ETAP 2: OBLICZENIA KOSZTÓW (APLIKACJA)
-Koszty wg cennika AUTO1 (2026):
-- Dokumenty: DE/BE: 448 EUR, AT: 468 EUR, IT: 628 EUR, pozostałe sprawdź w tabeli
-- Akcyza: ≤1999ccm: 3.1%, >1999ccm: 18.6%
-- Kurs: 4.22 PLN/EUR
-- Dodatkowe PL: 660 PLN (rejestracja + pranie + chemia)
+PARSUJ ZE SCREENA:
+- auction_price_eur, transport_eur, country, vehicle (model, rok, przebieg, silnik ccm), equipment
 
-Wzór:
-base_pln = (auction_price_eur + transport_eur) × 4.22
-docs_pln = documents_eur × 4.22
-excise_pln = base_pln × excise_rate
+OBLICZ KOSZTY (aplikacja):
+base_pln = (auction_eur + transport_eur) × 4.22
+docs_pln = docs_eur × 4.22 (BE/CZ/DE: 448, AT: 468, IT: 628)
+excise_pln = (auction_eur × 4.22) × rate (≤1999ccm: 3.1%, >1999ccm: 18.6%)
 all_in_pln = base_pln + docs_pln + excise_pln + 660
 
-ETAP 3: ANALIZA RYNKU (AI)
-Teraz Ty przejmujesz:
+ANALIZA RYNKU:
+1) Identyfikuj trim + opcje (klimatyzacja, automat, LED, nawigacja, skóra, 4x4)
+2) Zbierz 8-15 comps z Otomoto/OLX (podobne: model, rok±1, silnik, skrzynia)
+3) REALNA cena transakcyjna (NIE cena ogłoszenia!) + widełki
+4) Confidence (Wysokie/Średnie/Niskie) + ryzyka handlowe
 
-1) IDENTYFIKACJA WERSJI/WYPOSAŻENIA
-- Ustal trim (Comfort/Business/GT/Style/itp.) - pewny/niepewny
-- Kluczowe opcje (+): automat, 4x4, LED, ACC, kamera, nawigacja, skóra, panorama, hak
-- Deal-breakery (-): brak klimy, nietypowa konfiguracja
+WERDYKT:
+profit = sale_price - all_in
+Marża OK: 3500-4500 zł | Min: 2500-3000 zł (tylko szybki obrót)
+KUP / ODPUŚĆ / KUP DO CENY X
 
-2) COMPS (PORÓWNANIA PL)
-- Zbierz 8-15 ofert z Otomoto/OLX: marka+model+generacja, rok ±1, silnik/moc, skrzynia, napęd
-- Odrzuć skrajności (uszkodzone, bez opłat, anomalie)
-- Wybierz 5-8 najlepszych, policz medianę i rozrzut
-
-3) CENA TRANSAKCYJNA REALNA
-- Cena ogłoszeń ≠ cena sprzedaży
-- Korekty: przebieg, wyposażenie, stan, import
-- Wynik: cena sprzedaży (PLN) + widełki (min-max) + pozycjonowanie
-
-4) CONFIDENCE + RYZYKA
-- Pewność: Wysokie/Średnie/Niskie
-- Czynniki obniżające pewność
-- Ryzyka handlowe (popyt, typowe awarie jako czynnik negocjacji)
-
-5) WERDYKT
-profit_pln = sale_price_pln - all_in_pln
-profit_percent = (profit_pln / all_in_pln) × 100
-
-Marża docelowa: 3500-4500 zł
-Marża min: 2500-3000 zł (tylko szybki obrót ≤30 dni)
-
-Werdykt:
-- KUP: jeśli profit ≥ 3500 zł i brak czerwonych flag
-- ODPUŚĆ: jeśli profit < 2500 zł lub wysokie ryzyko
-- KUP DO CENY X: jeśli profit za niski → policz max_all_in_pln = sale_price_pln - 3500
-
-FORMAT JSON:
+JSON:
 {
   "vehicle": {
-    "model": "Volkswagen Polo 1.4 FSI Comfortline",
-    "year": 2009,
-    "mileage": 224328,
-    "engine": 1390,
-    "priceEur": 1611,
-    "transportEur": 454,
-    "country": "IT",
-    "trim": "Comfortline (pewny)",
-    "keyFeatures": ["Klimatyzacja", "El. szyby", "ABS", "ESP"],
-    "dealBreakers": []
+    "model": "Škoda Citigo 1.0 MPI Ambition",
+    "year": 2012,
+    "mileage": 118128,
+    "engine": 999,
+    "priceEur": 1794,
+    "transportEur": 537,
+    "country": "BE",
+    "trim": "Ambition",
+    "keyFeatures": ["Klimatyzacja", "El. szyby", "5 drzwi", "Radio"]
   },
   "costs": {
-    "totalPln": 11500,
+    "totalPln": 12615,
     "breakdown": {
-      "vehicle": 6798,
-      "transport": 1916,
-      "documents": 2648,
-      "excise": 236,
+      "vehicle": 7570,
+      "transport": 2266,
+      "documents": 1890,
+      "excise": 229,
       "additional": 660
     }
   },
   "marketAnalysis": {
-    "compsCount": 8,
-    "compsMedian": 13500,
-    "compsRange": "12000-15000 PLN",
-    "realSalePrice": 13000,
-    "salePriceRange": "12500-13500 PLN",
-    "positioning": "Środek rynku, negocjacja do 12000",
-    "confidence": "Średnie - wysoki przebieg, niepewna historia",
+    "compsCount": 12,
+    "compsMedian": 17000,
+    "compsRange": "15500-18500",
+    "realSalePrice": 16500,
+    "salePriceRange": "16000-17000",
+    "positioning": "Środek rynku, negocjacja 15500-16000",
+    "confidence": "Wysokie - MPI ma świetną reputację, prosty segment",
     "risks": [
-      "Bardzo wysoki przebieg 224k km - utrudni sprzedaż",
-      "Wiek 15 lat - możliwe problemy techniczne",
-      "Segment popularny ale przebieg odstrasza młodszych kupujących"
+      "Segment bardzo cenoczuły",
+      "Klient wybiera tanie auto więc mocno negocjuje"
     ]
   },
   "verdict": {
-    "decision": "ODPUŚĆ",
-    "reason": "Marża tylko 1500 zł (13%), poniżej minimum 2500 zł. Wysoki przebieg = ryzyko długiej sprzedaży.",
-    "profitPln": 1500,
-    "profitPercent": 13,
-    "maxAllInPln": 9500,
-    "note": "Aby osiągnąć min 3500 zł marży: max 9500 PLN all-in (obecnie 11500)"
+    "decision": "KUP",
+    "reason": "Marża 3885 zł (31%) - IDEALNE w założeniach projektu. Prosty silnik MPI, dobry popyt.",
+    "profitPln": 3885,
+    "profitPercent": 31,
+    "maxAllInPln": 13000,
+    "note": "Wzorcowy przykład - prosty, rotujący, dobra marża"
   },
   "salesStrategy": {
-    "listingPrice": "12800-13200 PLN, negocjacja 12000-12500",
-    "improvements": "Pranie gruntowne, odświeżenie plastików, drobne poprawki",
-    "marketingTips": "Podkreśl Comfortline, pełna dokumentacja IT, serwisowany",
-    "targetBuyer": "Student/młoda osoba szukająca taniej jazdy, akceptuje wysoki przebieg"
+    "listingPrice": "16500-17000, negocjacja 15500-16000",
+    "marketingTips": "Podkreśl: MPI = bardzo niezawodny, miejskie auto, tania eksploatacja, 5 drzwi"
   }
 }
 
 ZASADY:
-- NIE zaniżaj ceny pod szybki obrót - wyceniaj REALNIE
-- Odrzucaj auta wymagające napraw mechanicznych/lakierniczych (poza PDR/polerka)
-- Bądź konkretny i zgodny z rzeczywistością rynku PL</div>
+- Wyceniaj REALNIE (nie zaniżaj)
+- Uwzględnij koszty po stronie kupującego (odrzuć auta wymagające napraw mech/lakier)
+- Bądź konkretny dla polskiego rynku</div>
 </body>
 </html>
